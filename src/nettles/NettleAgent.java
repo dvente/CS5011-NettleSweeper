@@ -1,23 +1,20 @@
 package nettles;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class NettleAgent {
 
     // NettleGame game;
     Map map;
     Strategy strat;
     private int probeCounter = 0;
-    Set<MapCell> revealedCells = null;
-    Set<MapCell> flaggedCells = null;
+    // Set<MapCell> revealedCells = null;
+    // Set<MapCell> flaggedCells = null;
 
     public NettleAgent(Map map) {
         // this.game = game;
         this.map = map;
         strat = new RandomGuessStrategy(map);
-        revealedCells = new HashSet<MapCell>();
-        flaggedCells = new HashSet<MapCell>();
+        // revealedCells = new HashSet<MapCell>();
+        // flaggedCells = new HashSet<MapCell>();
     }
 
     public void firstMove() {

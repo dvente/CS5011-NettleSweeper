@@ -83,7 +83,7 @@ public class NettleGame implements Observer {
         assert args.length >= 1;
         final File root = new File(args[0]);
         File[] difficulties = { root.listFiles()[1] };
-        File[] maps = { difficulties[0].listFiles()[0] };
+        File[] maps = { difficulties[0].listFiles()[1] };
         for (final File difficultyDir : difficulties) {
             System.out.println("Difficulty: " + difficultyDir.getName());
             tabs = "\t";
@@ -107,7 +107,6 @@ public class NettleGame implements Observer {
     @Override
     public void update(Observable o, Object arg) {
 
-        System.out.println("Updating with " + arg.toString());
         MapCell cell = (MapCell) arg;
         if (cell.getNumberOfAdjacentNettles() == -1) {
             failed = true;
@@ -117,7 +116,7 @@ public class NettleGame implements Observer {
             if (map.getNumberOfHiddenCells() == map.getNumberOfNettels()) {
                 endGame();
             } else if (cell.getNumberOfAdjacentNettles() == 0) {
-                for (MapCell neighbour : map.getChildren(cell)) {
+                for (MapCell neighbour : map.getNeighbours(cell)) {
                     map.revealCell(neighbour);
                 }
 

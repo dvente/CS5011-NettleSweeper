@@ -116,7 +116,6 @@ public class Map extends Observable {
 
         if (cell.isHidden()) {
             cell.setHidden(false);
-            System.out.println("notifing observers");
             setChanged();
             notifyObservers(cell);
         }
@@ -124,13 +123,13 @@ public class Map extends Observable {
         return cell.getNumberOfAdjacentNettles();
     }
 
-    public List<MapCell> getChildren(MapCell cell) {
+    public List<MapCell> getNeighbours(MapCell cell) {
 
         List<MapCell> answer = new LinkedList<MapCell>();
 
         for (int k = -1; k < 2; k++) {
             for (int l = -1; l < 2; l++) {
-                if (cell.getI() + k >= 0 && cell.getI() < getMapLength() && cell.getJ() + l >= 0
+                if (cell.getI() + k >= 0 && cell.getI() + k < getMapLength() && cell.getJ() + l >= 0
                         && cell.getJ() + l < getMapWidth()) {
                     answer.add(getCellAt(cell.getI() + k, cell.getJ() + l));
                 }
