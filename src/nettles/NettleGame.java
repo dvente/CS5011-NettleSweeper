@@ -6,10 +6,6 @@ import java.util.Observer;
 
 public class NettleGame implements Observer {
 
-    //
-    // private MapCell[][] map;
-    // private int mapLength = -1;
-    // private int mapWidth = -1;
     private Map map;
     private boolean gameOver = false;
     private boolean failed = false;
@@ -55,7 +51,8 @@ public class NettleGame implements Observer {
             }
 
         }
-        System.out.println(tabs + "Final number of probes:" + agent.getProbeCounter());
+        System.out.println(tabs + "Final number of random guesses: " + Integer.toString(agent.getRandomGuessCounter()));
+        System.out.println(tabs + "Final number of probes: " + Integer.toString(agent.getProbeCounter()));
         System.out.println(tabs + "Sucseeded: " + !failed);
 
     }
@@ -82,7 +79,7 @@ public class NettleGame implements Observer {
 
         assert args.length >= 1;
         final File root = new File(args[0]);
-        File[] difficulties = { root.listFiles()[1] };
+        File[] difficulties = {new File(args[0] + File.separator + "hard")};
         File[] maps = { difficulties[0].listFiles()[1] };
         for (final File difficultyDir : difficulties) {
             System.out.println("Difficulty: " + difficultyDir.getName());
@@ -118,6 +115,7 @@ public class NettleGame implements Observer {
             } else if (cell.getNumberOfAdjacentNettles() == 0) {
                 for (MapCell neighbour : map.getNeighbours(cell)) {
                     map.revealCell(neighbour);
+                    agent.strat.recordCell(neighbour);
                 }
 
             }

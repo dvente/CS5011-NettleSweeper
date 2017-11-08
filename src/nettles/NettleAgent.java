@@ -2,58 +2,96 @@ package nettles;
 
 public class NettleAgent {
 
-    // NettleGame game;
+	//TODO agent should build internal map representation instead of what is curently happening
+	
     Map map;
     Strategy strat;
+    private int randomGuessCounter = 0;
     private int probeCounter = 0;
-    // Set<MapCell> revealedCells = null;
-    // Set<MapCell> flaggedCells = null;
 
     public NettleAgent(Map map) {
-        // this.game = game;
         this.map = map;
-        strat = new RandomGuessStrategy(map);
-        // revealedCells = new HashSet<MapCell>();
-        // flaggedCells = new HashSet<MapCell>();
+//        strat = new RandomGuessStrategy(this,map);
+        strat = new SinglePointStrategy(this,map);
     }
 
     public void firstMove() {
 
         probe(0, 0);
     }
+    
+    public void flag(MapCell cell) {
+    	if(map.getCellAt(cell.getI(), cell.getJ()).isHidden()) {
+            if (NettleGame.verbose) {
+                System.out.println(NettleGame.tabs + "Flagging :" + cell.toString());
+            }
+        	map.getCellAt(cell.getI(), cell.getJ()).setFlagged(true);
+    	}
+
+    }
+    
+    public void flag(int i, int j) {
+    	if(map.getCellAt(i, j).isHidden()) {
+            if (NettleGame.verbose) {
+                System.out.println(NettleGame.tabs + "Flagging :" + map.getCellAt(i, j).toString());
+            }
+        	map.getCellAt(i, j).setFlagged(true);
+    	}
+
+    }
 
     public int probe(int i, int j) {
+    	if(!map.getCellAt(i, j).isFlagged() && map.getCellAt(i, j).isHidden()) {
+            if (NettleGame.verbose) {
+                System.out.println(NettleGame.tabs + "Probing: " + map.getCellAt(i, j).toString());
+            }
+            incrProbeCounter();
+    		return map.revealCell(map.getCellAt(i, j));
+    	}
+    	else {
+    		return -1;
+    	}
+        
 
-        incrProbeCounter();
-        return map.revealCell(map.getCellAt(i, j));
+    }
+    
+    public int probe(MapCell cell) {
+    	if(!map.getCellAt(cell.getI(), cell.getJ()).isFlagged() && map.getCellAt(cell.getI(), cell.getJ()).isHidden()) {
+            if (NettleGame.verbose) {
+                System.out.println(NettleGame.tabs + "Probing: " + cell.toString());
+            }
+            incrProbeCounter();
+    		return map.revealCell(map.getCellAt(cell.getI(), cell.getJ()));
+    	}
+    	else {
+    		return -1;
+    	}
+        
 
     }
 
-    public void flag(MapCell cell) {
-
-        if (NettleGame.verbose) {
-            System.out.println(NettleGame.tabs + "Flagged: " + cell.toString());
-        }
-        map.flag(cell.getI(), cell.getJ());
-    }
-
+   
     public void makeMove() {
 
-        MapCell move = strat.deterimeMove();
-        if (NettleGame.verbose) {
-            System.out.println(NettleGame.tabs + "Probing :" + move.toString());
-        }
-        probe(move.getI(), move.getJ());
+        strat.deterimeMove();
     }
 
-    public int getProbeCounter() {
+    public int getRandomGuessCounter() {
 
-        return probeCounter;
+        return strat.getRandomGuessCounter();
     }
 
-    public void incrProbeCounter() {
+    public void incrRandomGuessCounter() {
 
-        this.probeCounter += 1;
+        strat.incrRandomGuessCounter();
     }
+
+	public int getProbeCounter() {
+		return probeCounter;
+	}
+
+	public void incrProbeCounter() {
+		probeCounter += 1;
+	}
 
 }

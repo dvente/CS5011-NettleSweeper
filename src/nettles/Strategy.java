@@ -1,6 +1,12 @@
 package nettles;
 
-public interface Strategy {
+import java.util.List;
 
-    public MapCell deterimeMove();
+public interface Strategy {
+	public void recordCell(MapCell cell);
+	public void deterimeMove();
+    public int getRandomGuessCounter();
+    public void incrRandomGuessCounter();
+    public void randomMove();
+    
 }
