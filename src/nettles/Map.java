@@ -7,14 +7,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
 
-public class Map {
+public class Map extends Observable {
 
     private int numberOfHiddenCells = -1;
     private MapCell[][] map = null;
     private int mapLength = -1;
     private int mapWidth = -1;
     private int numberOfNettels = -1;
+
+    // private List<Observer> observers;
 
     public int getNumberOfHiddenCells() {
 
@@ -27,8 +30,9 @@ public class Map {
     }
 
     // The next functions were taken from the A2 practical
-    public Map(File file) {
+    public Map(File file, NettleGame game) {
         super();
+        addObserver(game);
 
         try (BufferedReader in = new BufferedReader(new FileReader(file));) {
             mapLength = Integer.parseInt(in.readLine().trim());
@@ -46,11 +50,9 @@ public class Map {
                 }
             }
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             System.exit(1);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             System.exit(1);
         }
@@ -64,10 +66,9 @@ public class Map {
 
     public void printMap() {
 
-        String tabs = "\t\t";
-        System.out.println(tabs + "number of nettles: " + Integer.toString(numberOfNettels));
+        System.out.println(NettleGame.tabs + "number of nettles: " + Integer.toString(numberOfNettels));
         for (int i = 0; i < getMapLength(); i++) {
-            System.out.print(tabs);
+            System.out.print(NettleGame.tabs);
             for (int j = 0; j < getMapWidth(); j++) {
                 System.out.print(getCellAt(i, j).toMapString());
             }
@@ -111,6 +112,18 @@ public class Map {
 
     }
 
+    public int revealCell(MapCell cell) {
+
+        if (cell.isHidden()) {
+            cell.setHidden(false);
+            System.out.println("notifing observers");
+            setChanged();
+            notifyObservers(cell);
+        }
+
+        return cell.getNumberOfAdjacentNettles();
+    }
+
     public List<MapCell> getChildren(MapCell cell) {
 
         List<MapCell> answer = new LinkedList<MapCell>();
@@ -143,6 +156,14 @@ public class Map {
     public void setNumberOfNettels(int numberOfNettels) {
 
         this.numberOfNettels = numberOfNettels;
+    }
+
+    public void flag(int i, int j) {
+
+        MapCell flagedCell = getCellAt(i, j);
+        flagedCell.setFlagged(true);
+        notifyObservers(flagedCell);
+
     }
 
 }

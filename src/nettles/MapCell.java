@@ -6,6 +6,7 @@ public class MapCell {
     private final int j;
     private final int numberOfAdjacentNettles;
     private boolean hidden;
+    private boolean flagged;
 
     public MapCell(int i, int j, int adjacentNettles) {
         super();
@@ -13,6 +14,7 @@ public class MapCell {
         this.i = i;
         this.j = j;
         hidden = true;
+        setFlagged(false);
     }
 
     public int getI() {
@@ -29,10 +31,46 @@ public class MapCell {
     public String toMapString() {
 
         if (isHidden()) {
-            return "  ?";
+            if (isFlagged()) {
+                return "  F";
+            } else {
+                return "  ?";
+            }
         } else {
             return String.format("%3d", getNumberOfAdjacentNettles());
         }
+    }
+
+    @Override
+    public int hashCode() {
+
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + i;
+        result = prime * result + j;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        MapCell other = (MapCell) obj;
+        if (i != other.i) {
+            return false;
+        }
+        if (j != other.j) {
+            return false;
+        }
+        return true;
     }
 
     public int getJ() {
@@ -67,6 +105,16 @@ public class MapCell {
     public void setHidden(boolean hidden) {
 
         this.hidden = hidden;
+    }
+
+    public boolean isFlagged() {
+
+        return flagged;
+    }
+
+    public void setFlagged(boolean flagged) {
+
+        this.flagged = flagged;
     }
 
 }
