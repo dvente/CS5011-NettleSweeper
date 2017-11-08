@@ -3,8 +3,11 @@ package nettles;
 
 public class NettleAgent {
 
-    public NettleAgent() {
-        // TODO Auto-generated constructor stub
+	NettleGame game;
+	
+    public NettleAgent(NettleGame game) {
+    	this.game = game;
     }
+
 
 }
