@@ -78,15 +78,6 @@ public class MapCell {
         return j;
     }
 
-    public int getCost() {
-
-        return 1;
-    }
-
-    // public int manhattanDist(SearchNode other) {
-    // return Math.abs(getI() - other.getI()) + Math.abs(getJ() - other.getJ());
-    // }
-
     public boolean isAdjacent(MapCell other) {
 
         return Math.max(Math.abs(getI() - other.getI()), Math.abs(getJ() - other.getJ())) == 1;

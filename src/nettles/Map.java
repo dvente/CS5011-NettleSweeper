@@ -12,206 +12,207 @@ import java.util.Observable;
 
 public class Map extends Observable {
 
-	private int numberOfHiddenCells = -1;
-	private MapCell[][] map = null;
-	private int mapLength = -1;
-	private int mapWidth = -1;
-	private int numberOfNettels = -1;
+    private int numberOfHiddenCells = -1;
+    private MapCell[][] map = null;
+    private int mapLength = -1;
+    private int mapWidth = -1;
+    private int numberOfNettels = -1;
 
-	// private List<Observer> observers;
+    // private List<Observer> observers;
 
-	public int getNumberOfHiddenCells() {
+    public int getNumberOfHiddenCells() {
 
-		return numberOfHiddenCells;
-	}
+        return numberOfHiddenCells;
+    }
 
-	public void decrNumberOfHiddenCells() {
+    public void decrNumberOfHiddenCells() {
 
-		this.numberOfHiddenCells -= 1;
-	}
+        this.numberOfHiddenCells -= 1;
+    }
 
-	public List<MapCell> getHiddenCells() {
-		List<MapCell> answer = new ArrayList<MapCell>();
-		for (int i = 0; i < getMapLength(); i++) {
-			for (int j = 0; j < getMapWidth(); j++) {
-				if (getCellAt(i, j).isHidden()) {
-					answer.add(getCellAt(i, j));
-				}
+    public List<MapCell> getHiddenCells() {
 
-			}
-		}
-		return answer;
-	}
+        List<MapCell> answer = new ArrayList<MapCell>();
+        for (int i = 0; i < getMapLength(); i++) {
+            for (int j = 0; j < getMapWidth(); j++) {
+                if (getCellAt(i, j).isHidden()) {
+                    answer.add(getCellAt(i, j));
+                }
 
-	// The next functions were taken from the A2 practical
-	public Map(File file, NettleGame game) {
-		super();
-		addObserver(game);
+            }
+        }
+        return answer;
+    }
 
-		try (BufferedReader in = new BufferedReader(new FileReader(file));) {
-			mapLength = Integer.parseInt(in.readLine().trim());
-			mapWidth = Integer.parseInt(in.readLine().trim());
-			setNumberOfNettels(Integer.parseInt(in.readLine().trim()));
-			map = new MapCell[mapLength][mapWidth];
-			String line;
-			String[] splitLine;
+    // The next functions were taken from the A2 practical
+    public Map(File file, NettleGame game) {
+        super();
+        addObserver(game);
 
-			for (int i = 0; i < getMapLength(); i++) {
-				line = in.readLine();
-				splitLine = line.split(",");
-				for (int j = 0; j < getMapWidth(); j++) {
-					map[i][j] = new MapCell(i, j, Integer.parseInt(splitLine[j].trim()));
-				}
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			System.exit(1);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		checkWorld();
-		numberOfHiddenCells = getMapLength() * getMapWidth();
-		if (NettleGame.verbose) {
-			printMap();
-		}
+        try (BufferedReader in = new BufferedReader(new FileReader(file));) {
+            mapLength = Integer.parseInt(in.readLine().trim());
+            mapWidth = Integer.parseInt(in.readLine().trim());
+            setNumberOfNettels(Integer.parseInt(in.readLine().trim()));
+            map = new MapCell[mapLength][mapWidth];
+            String line;
+            String[] splitLine;
 
-	}
+            for (int i = 0; i < getMapLength(); i++) {
+                line = in.readLine();
+                splitLine = line.split(",");
+                for (int j = 0; j < getMapWidth(); j++) {
+                    map[i][j] = new MapCell(i, j, Integer.parseInt(splitLine[j].trim()));
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.exit(1);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        checkWorld();
+        numberOfHiddenCells = getMapLength() * getMapWidth();
+        if (NettleGame.verbose) {
+            printMap();
+        }
 
-	public void printMap() {
+    }
 
-		// System.out.println(NettleGame.tabs + "number of nettles: " +
-		// Integer.toString(numberOfNettels));
-		for (int i = 0; i < getMapLength(); i++) {
-			System.out.print(NettleGame.tabs);
-			for (int j = 0; j < getMapWidth(); j++) {
-				System.out.print(getCellAt(i, j).toMapString());
-			}
-			System.out.println();
-		}
-		System.out.println();
-	}
+    public void printMap() {
 
-	public MapCell getCellAt(int i, int j) {
+        // System.out.println(NettleGame.tabs + "number of nettles: " +
+        // Integer.toString(numberOfNettels));
+        for (int i = 0; i < getMapLength(); i++) {
+            System.out.print(NettleGame.tabs);
+            for (int j = 0; j < getMapWidth(); j++) {
+                System.out.print(getCellAt(i, j).toMapString());
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
 
-		return map[i][j];
-	}
+    public MapCell getCellAt(int i, int j) {
 
-	public void setCell(MapCell cell) {
+        return map[i][j];
+    }
 
-		map[cell.getI()][cell.getJ()] = cell;
-	}
+    public void setCell(MapCell cell) {
 
-	public int getMapLength() {
+        map[cell.getI()][cell.getJ()] = cell;
+    }
 
-		return mapLength;
-	}
+    public int getMapLength() {
 
-	public int getMapWidth() {
+        return mapLength;
+    }
 
-		return mapWidth;
-	}
+    public int getMapWidth() {
 
-	public void checkWorld() {
+        return mapWidth;
+    }
 
-		int count = 0;
-		for (int i = 0; i < getMapLength(); i++) {
-			for (int j = 0; j < getMapWidth(); j++) {
-				if (getCellAt(i, j).getNumberOfAdjacentNettles() == -1) {
-					count++;
-				}
-			}
-		}
-		assert count == numberOfNettels : "INVALID NUMBER OF NETTLES \nnumber found: " + Integer.toString(count)
-				+ "\nnumber provided: " + Integer.toString(numberOfNettels);
+    public void checkWorld() {
 
-	}
+        int count = 0;
+        for (int i = 0; i < getMapLength(); i++) {
+            for (int j = 0; j < getMapWidth(); j++) {
+                if (getCellAt(i, j).getNumberOfAdjacentNettles() == -1) {
+                    count++;
+                }
+            }
+        }
+        assert count == numberOfNettels : "INVALID NUMBER OF NETTLES \nnumber found: " + Integer.toString(count)
+                + "\nnumber provided: " + Integer.toString(numberOfNettels);
 
-	public int revealCell(MapCell cell) {
+    }
 
-		if (cell.isHidden()) {
-			cell.setHidden(false);
-			setChanged();
-			notifyObservers(cell);
-		}
+    public int revealCell(MapCell cell) {
 
-		return cell.getNumberOfAdjacentNettles();
-	}
+        if (cell.isHidden()) {
+            cell.setHidden(false);
+            setChanged();
+            notifyObservers(cell);
+        }
 
-	/**
-	 * @param cell
-	 * @return a list containing the neighbours of the cell
-	 */
-	public List<MapCell> getNeighbours(MapCell cell) {
+        return cell.getNumberOfAdjacentNettles();
+    }
 
-		List<MapCell> answer = new LinkedList<MapCell>();
+    /**
+     * @param cell
+     * @return a list containing the neighbours of the cell
+     */
+    public List<MapCell> getNeighbours(MapCell cell) {
 
-		for (int k = -1; k < 2; k++) {
-			for (int l = -1; l < 2; l++) {
-				if (cell.getI() + k >= 0 && cell.getI() + k < getMapLength() && cell.getJ() + l >= 0
-						&& cell.getJ() + l < getMapWidth()) {
-					answer.add(getCellAt(cell.getI() + k, cell.getJ() + l));
-				}
-			}
-		}
-		return answer;
-	}
+        List<MapCell> answer = new LinkedList<MapCell>();
 
-	public List<MapCell> getHiddenNeighbours(MapCell cell) {
+        for (int k = -1; k < 2; k++) {
+            for (int l = -1; l < 2; l++) {
+                if (cell.getI() + k >= 0 && cell.getI() + k < getMapLength() && cell.getJ() + l >= 0
+                        && cell.getJ() + l < getMapWidth()) {
+                    answer.add(getCellAt(cell.getI() + k, cell.getJ() + l));
+                }
+            }
+        }
+        return answer;
+    }
 
-		List<MapCell> answer = new LinkedList<MapCell>();
+    public List<MapCell> getHiddenNeighbours(MapCell cell) {
 
-		for (int k = -1; k < 2; k++) {
-			for (int l = -1; l < 2; l++) {
-				if (cell.getI() + k >= 0 && cell.getI() + k < getMapLength() && cell.getJ() + l >= 0
-						&& cell.getJ() + l < getMapWidth() && cell.isHidden()) {
-					answer.add(getCellAt(cell.getI() + k, cell.getJ() + l));
-				}
-			}
-		}
-		return answer;
-	}
+        List<MapCell> answer = new LinkedList<MapCell>();
 
-	public List<MapCell> getFlaggedNeighbours(MapCell cell) {
+        for (int k = -1; k < 2; k++) {
+            for (int l = -1; l < 2; l++) {
+                if (cell.getI() + k >= 0 && cell.getI() + k < getMapLength() && cell.getJ() + l >= 0
+                        && cell.getJ() + l < getMapWidth() && cell.isHidden()) {
+                    answer.add(getCellAt(cell.getI() + k, cell.getJ() + l));
+                }
+            }
+        }
+        return answer;
+    }
 
-		List<MapCell> answer = new LinkedList<MapCell>();
+    public List<MapCell> getFlaggedNeighbours(MapCell cell) {
 
-		for (int k = -1; k < 2; k++) {
-			for (int l = -1; l < 2; l++) {
-				if (cell.getI() + k >= 0 && cell.getI() + k < getMapLength() && cell.getJ() + l >= 0
-						&& cell.getJ() + l < getMapWidth() && cell.isFlagged()) {
-					answer.add(getCellAt(cell.getI() + k, cell.getJ() + l));
-				}
-			}
-		}
+        List<MapCell> answer = new LinkedList<MapCell>();
 
-		return answer;
-	}
+        for (int k = -1; k < 2; k++) {
+            for (int l = -1; l < 2; l++) {
+                if (cell.getI() + k >= 0 && cell.getI() + k < getMapLength() && cell.getJ() + l >= 0
+                        && cell.getJ() + l < getMapWidth() && cell.isFlagged()) {
+                    answer.add(getCellAt(cell.getI() + k, cell.getJ() + l));
+                }
+            }
+        }
 
-	public int probe(int i, int j) {
+        return answer;
+    }
 
-		assert getCellAt(i, j).isHidden() : "Trying to probe revealed cell " + map[i][j].toString();
-		getCellAt(i, j).setHidden(false);
-		return getCellAt(i, j).getNumberOfAdjacentNettles();
+    public int probe(int i, int j) {
 
-	}
+        assert getCellAt(i, j).isHidden() : "Trying to probe revealed cell " + map[i][j].toString();
+        getCellAt(i, j).setHidden(false);
+        return getCellAt(i, j).getNumberOfAdjacentNettles();
 
-	public int getNumberOfNettels() {
+    }
 
-		return numberOfNettels;
-	}
+    public int getNumberOfNettels() {
 
-	public void setNumberOfNettels(int numberOfNettels) {
+        return numberOfNettels;
+    }
 
-		this.numberOfNettels = numberOfNettels;
-	}
+    public void setNumberOfNettels(int numberOfNettels) {
 
-	public void flag(int i, int j) {
+        this.numberOfNettels = numberOfNettels;
+    }
 
-		MapCell flagedCell = getCellAt(i, j);
-		flagedCell.setFlagged(true);
-		notifyObservers(flagedCell);
+    public void flag(int i, int j) {
 
-	}
+        MapCell flagedCell = getCellAt(i, j);
+        flagedCell.setFlagged(true);
+        notifyObservers(flagedCell);
+
+    }
 
 }

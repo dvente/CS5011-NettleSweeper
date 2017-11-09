@@ -1,83 +1,86 @@
 package nettles;
 
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 public class SinglePointStrategy implements Strategy {
 
-	Random rng;
-	Map map;
-	NettleAgent agent;
-	private int mapLength;
-	private int mapWidth;
-	Set<MapCell> revealedCells = null;
-	private int randomGuessCounter = 0;
+    // TODO get frontier implementation
+    Random rng;
+    Map map;
+    NettleAgent agent;
+    private int mapLength;
+    private int mapWidth;
+    private List<MapCell> hiddenCells = null;
+    private int randomGuessCounter = 0;
 
-	public SinglePointStrategy(NettleAgent agent, Map map) {
-		super();
-		this.agent = agent;
-		rng = new Random();
-		this.map = map;
-		this.mapLength = map.getMapLength();
-		this.mapWidth = map.getMapWidth();
-		revealedCells = new HashSet<MapCell>();
-	}	
-	
-	@Override
-	public void deterimeMove() {
-		for(MapCell cell : map.getHiddenCells()) {
-			if(map.getFlaggedNeighbours(cell).size() == cell.getNumberOfAdjacentNettles()) {
-				for (MapCell mapCell : map.getHiddenNeighbours(cell)) {
-					agent.probe(mapCell);
-				}
-				continue;
-			} else if(map.getHiddenNeighbours(cell).size() == cell.getNumberOfAdjacentNettles()) {
-				for (MapCell mapCell : map.getHiddenNeighbours(cell)) {
-					agent.flag(mapCell);
-				}
-				continue;
-			}
-		}
-		randomMove();
-		
-	}
+    public SinglePointStrategy(NettleAgent agent, Map map, List<MapCell> hiddenCells) {
+        super();
+        this.agent = agent;
+        rng = new Random();
+        this.map = map;
+        this.mapLength = map.getMapLength();
+        this.mapWidth = map.getMapWidth();
+        this.hiddenCells = hiddenCells;
+    }
 
-	@Override
-	public int getRandomGuessCounter() {
+    @Override
+    public void deterimeMove() {
 
-		return randomGuessCounter;
-	}
+        for (MapCell cell : map.getHiddenCells()) {
+            if (allNeighboursAreSafe(cell)) {
+                for (MapCell mapCell : map.getHiddenNeighbours(cell)) {
+                    agent.probe(mapCell);
+                }
+                continue;
+            } else if (allNeighboursAreNettels(cell)) {
+                for (MapCell mapCell : map.getHiddenNeighbours(cell)) {
+                    agent.flag(mapCell);
+                }
+                continue;
+            }
+        }
+        randomMove();
 
-	@Override
-	public void incrRandomGuessCounter() {
+    }
 
-		this.randomGuessCounter += 1;
-	}
-	
-	 public void flag(MapCell cell) {
+    public boolean allNeighboursAreSafe(MapCell cell) {
 
-	        if (NettleGame.verbose) {
-	            System.out.println(NettleGame.tabs + "Flagged: " + cell.toString());
-	        }
-	        map.flag(cell.getI(), cell.getJ());
-	    }
+        return map.getFlaggedNeighbours(cell).size() == cell.getNumberOfAdjacentNettles();
+    }
 
-		@Override
-		public void randomMove() {
-	        MapCell cell;
-	        do {
-	            cell = new MapCell(rng.nextInt(mapLength), rng.nextInt(mapWidth), -2);
-	        } while (revealedCells.contains(cell));
-	        incrRandomGuessCounter();
-	        agent.probe(cell);
-		}
+    public boolean allNeighboursAreNettels(MapCell cell) {
 
-		@Override
-		public void recordCell(MapCell cell) {
-			revealedCells.add(cell);
-			
-		}
+        return map.getHiddenNeighbours(cell).size() == cell.getNumberOfAdjacentNettles()
+                - map.getFlaggedNeighbours(cell).size();
+    }
+
+    @Override
+    public int getRandomGuessCounter() {
+
+        return randomGuessCounter;
+    }
+
+    @Override
+    public void incrRandomGuessCounter() {
+
+        this.randomGuessCounter += 1;
+    }
+
+    public void flag(MapCell cell) {
+
+        if (NettleGame.verbose) {
+            System.out.println(NettleGame.tabs + "Flagged: " + cell.toString());
+        }
+        map.flag(cell.getI(), cell.getJ());
+    }
+
+    @Override
+    public void randomMove() {
+
+        MapCell cell = hiddenCells.get(rng.nextInt(hiddenCells.size()));
+        incrRandomGuessCounter();
+        agent.probe(cell);
+    }
 
 }
