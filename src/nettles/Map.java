@@ -165,7 +165,7 @@ public class Map extends Observable {
         for (int k = -1; k < 2; k++) {
             for (int l = -1; l < 2; l++) {
                 if (cell.getI() + k >= 0 && cell.getI() + k < getMapLength() && cell.getJ() + l >= 0
-                        && cell.getJ() + l < getMapWidth() && cell.isHidden()) {
+                        && cell.getJ() + l < getMapWidth() && getCellAt(cell.getI() + k, cell.getJ() + l).isHidden()) {
                     answer.add(getCellAt(cell.getI() + k, cell.getJ() + l));
                 }
             }
@@ -180,7 +180,7 @@ public class Map extends Observable {
         for (int k = -1; k < 2; k++) {
             for (int l = -1; l < 2; l++) {
                 if (cell.getI() + k >= 0 && cell.getI() + k < getMapLength() && cell.getJ() + l >= 0
-                        && cell.getJ() + l < getMapWidth() && cell.isFlagged()) {
+                        && cell.getJ() + l < getMapWidth() && getCellAt(cell.getI() + k, cell.getJ() + l).isFlagged()) {
                     answer.add(getCellAt(cell.getI() + k, cell.getJ() + l));
                 }
             }
