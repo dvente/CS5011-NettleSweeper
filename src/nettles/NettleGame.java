@@ -79,8 +79,8 @@ public class NettleGame implements Observer {
 
         assert args.length >= 1;
         final File root = new File(args[0]);
-        File[] difficulties = { new File(args[0] + File.separator + "easy") };
-        File[] maps = { difficulties[0].listFiles()[3] };
+        File[] difficulties = { new File(args[0] + File.separator + "hard") };
+        File[] maps = { difficulties[0].listFiles()[1] };
         for (final File difficultyDir : difficulties) {
             System.out.println("Difficulty: " + difficultyDir.getName());
             tabs = "\t";

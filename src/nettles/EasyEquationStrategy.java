@@ -36,7 +36,7 @@ public class EasyEquationStrategy extends SinglePointStrategy implements Strateg
 	protected boolean easyEquationMove() {
 		Collection<MapCell> frontier = map.getFronteir();
 		for (Pair<MapCell, MapCell> pair : enumirateAdjacentPairs(frontier, frontier)) {
-			System.out.println(NettleGame.tabs + "EES");
+//			System.out.println(NettleGame.tabs + "EES");
 			MapCell A = pair.getKey();
 			MapCell B = pair.getValue();
 			if (map.getHiddenNeighbours(A).equals(map.getHiddenNeighbours(B))) {
