@@ -1,6 +1,5 @@
 package nettles;
 
-import java.util.AbstractCollection;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,64 +9,113 @@ import javafx.util.Pair;
 
 public class EasyEquationStrategy extends SinglePointStrategy implements Strategy {
 
-	// MapCellODO get frontier implementation
+    public EasyEquationStrategy(NettleAgent agent, Map map, List<MapCell> hiddenCells) {
+        super(agent, map, hiddenCells);
+    }
 
-	public EasyEquationStrategy(NettleAgent agent, Map map, List<MapCell> hiddenCells) {
-		super(agent, map, hiddenCells);
-	}
+    public static Collection<Pair<MapCell, MapCell>> enumirateAdjacentPairs(Collection<MapCell> first,
+            Collection<MapCell> second) {
 
-	public static Collection<Pair<MapCell, MapCell>> enumirateAdjacentPairs(Collection<MapCell> first,
-			Collection<MapCell> second) {
-		Collection<Pair<MapCell, MapCell>> answer = new HashSet<Pair<MapCell, MapCell>>();
+        Collection<Pair<MapCell, MapCell>> answer = new HashSet<Pair<MapCell, MapCell>>();
 
-		for (MapCell firstObject : first) {
-			for (MapCell secondObject : second) {
-				// we only want combinations so don't add them double
-				if (!answer.contains(new Pair<MapCell, MapCell>(secondObject, firstObject))
-						&& firstObject.isAdjacent(secondObject)) {
-					answer.add(new Pair<MapCell, MapCell>(firstObject, secondObject));
-				}
-			}
-		}
-		return answer;
+        for (MapCell firstObject : first) {
+            for (MapCell secondObject : second) {
+                // we only want combinations so don't add them double
+                if (!answer.contains(new Pair<MapCell, MapCell>(secondObject, firstObject))
+                        && firstObject.isAdjacent(secondObject)) {
+                    answer.add(new Pair<MapCell, MapCell>(firstObject, secondObject));
+                }
+            }
+        }
+        return answer;
 
-	}
+    }
 
-	protected boolean easyEquationMove() {
-		Collection<MapCell> frontier = map.getFronteir();
-		for (Pair<MapCell, MapCell> pair : enumirateAdjacentPairs(frontier, frontier)) {
-//			System.out.println(NettleGame.tabs + "EES");
-			MapCell A = pair.getKey();
-			MapCell B = pair.getValue();
-			if (map.getHiddenNeighbours(A).equals(map.getHiddenNeighbours(B))) {
-				continue;
-			}
-			int diff = Math.abs((A.getNumberOfAdjacentNettles() - map.getFlaggedNeighbours(A).size())
-					- (B.getNumberOfAdjacentNettles() - map.getFlaggedNeighbours(B).size()));
-			Collection<MapCell> setDifferenceNeighbours = map.getHiddenNeighbours(A);
-			setDifferenceNeighbours.removeAll(map.getHiddenNeighbours(B));
-			if (setDifferenceNeighbours.size() == 1) {
-				MapCell C = setDifferenceNeighbours.iterator().next();
-				if (diff == 0) {
-					agent.probe(C);
-				} else {
-					agent.flag(C);
-				}
-				return true;
-			}
-		}
+    public static Collection<MapCell> symmetricDifference(Collection<MapCell> first, Collection<MapCell> second) {
 
-		return false;
-	}
+        Collection<MapCell> answer = new HashSet<MapCell>();
 
-	@Override
-	public void deterimeMove() {
+        for (MapCell object : first) {
+            if (!second.contains(object)) {
+                answer.add(object);
+            }
+        }
 
-		if (!singlePointMove()) {
-			if (!easyEquationMove()) {
-				randomMove();
-			}
-		}
-	}
+        for (MapCell object : second) {
+            if (!first.contains(object)) {
+                answer.add(object);
+            }
+        }
+
+        return answer;
+
+    }
+
+    protected boolean easyEquationMove() {
+
+        Collection<MapCell> frontier = map.getFronteir();
+        for (Pair<MapCell, MapCell> pair : enumirateAdjacentPairs(frontier, frontier)) {
+            if (NettleGame.verbose) {
+                System.out.println(NettleGame.tabs + "EES");
+            }
+
+            MapCell A = pair.getKey();
+            MapCell B = pair.getValue();
+            if (NettleGame.verbose) {
+                System.out.println(NettleGame.tabs + "[A,B]: [" + A.toString() + "," + B.toString() + "]");
+            }
+            List<MapCell> copy = map.getHiddenNeighbours(A);
+            copy.addAll(map.getHiddenNeighbours(B));
+            if (NettleGame.verbose) {
+                System.out.println(NettleGame.tabs + "Fronteir union: " + copy.toString());
+                System.out.println(isASubsetB(map.getHiddenNeighbours(A), map.getHiddenNeighbours(B)));
+                System.out.println(isASubsetB(map.getHiddenNeighbours(B), map.getHiddenNeighbours(A)));
+            }
+            if (!(isASubsetB(map.getHiddenNeighbours(A), map.getHiddenNeighbours(B))
+                    || isASubsetB(map.getHiddenNeighbours(B), map.getHiddenNeighbours(A)))) {
+                continue;
+            }
+            List<MapCell> superSet;
+            List<MapCell> subSet;
+            if (isASubsetB(map.getHiddenNeighbours(A), map.getHiddenNeighbours(B))) {
+                superSet = map.getHiddenNeighbours(B);
+                subSet = map.getHiddenNeighbours(A);
+            } else {
+                superSet = map.getHiddenNeighbours(A);
+                subSet = map.getHiddenNeighbours(B);
+            }
+
+            int diff = Math.abs((A.getNumberOfAdjacentNettles() - map.getFlaggedNeighbours(A).size())
+                    - (B.getNumberOfAdjacentNettles() - map.getFlaggedNeighbours(B).size()));
+            Collection<MapCell> setDifferenceNeighbours = superSet;
+            setDifferenceNeighbours.removeAll(subSet);
+            for (Iterator iterator = setDifferenceNeighbours.iterator(); iterator.hasNext();) {
+                MapCell C = (MapCell) iterator.next();
+                if (diff == 0) {
+                    agent.probe(C);
+                } else {
+                    agent.flag(C);
+                }
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isASubsetB(Collection<MapCell> A, Collection<MapCell> B) {
+
+        return B.containsAll(A);
+    }
+
+    @Override
+    public void deterimeMove() {
+
+        if (!singlePointMove()) {
+            if (!easyEquationMove()) {
+                randomMove();
+            }
+        }
+    }
 
 }

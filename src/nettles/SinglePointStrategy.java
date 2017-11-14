@@ -1,54 +1,63 @@
 package nettles;
 
 import java.util.List;
-import java.util.Random;
 
 public class SinglePointStrategy extends RandomGuessStrategy implements Strategy {
 
-	public SinglePointStrategy(NettleAgent agent, Map map, List<MapCell> hiddenCells) {
-		super(agent, map, hiddenCells);
-	}
+    public SinglePointStrategy(NettleAgent agent, Map map, List<MapCell> hiddenCells) {
+        super(agent, map, hiddenCells);
+    }
 
-	protected boolean singlePointMove() {
-		for (MapCell cell : map.getRevealedCells()) {
-			if (allNeighboursAreSafe(cell) && map.getHiddenNeighbours(cell).size() != 0
-					&& map.getHiddenNeighbours(cell).size() != 0) {
+    protected boolean singlePointMove() {
 
-				for (MapCell mapCell : map.getHiddenNeighbours(cell)) {
-					agent.probe(mapCell);
-				}
-				return true;
-			} else if (allNeighboursAreNettels(cell)) {
-				for (MapCell mapCell : map.getHiddenNeighbours(cell)) {
-					agent.flag(mapCell);
-				}
-				return true;
-			}
-		}
-		return false;
-	}
+        if (NettleGame.verbose) {
+            System.out.println(NettleGame.tabs + "SPS");
+        }
+        for (MapCell cell : map.getRevealedCells()) {
+            // System.out.println(NettleGame.tabs + "Checking cell: " +
+            // cell.toString());
+            if (allNeighboursAreSafe(cell) && map.getHiddenNeighbours(cell).size() != 0) {
 
-	@Override
-	public void deterimeMove() {
-		if (!singlePointMove()) {
-			randomMove();
-		}
+                for (MapCell mapCell : map.getHiddenNeighbours(cell)) {
+                    agent.probe(mapCell);
+                }
+                return true;
+            } else if (allNeighboursAreNettels(cell)) {
+                for (MapCell mapCell : map.getHiddenNeighbours(cell)) {
+                    agent.flag(mapCell);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
 
-	}
+    @Override
+    public void deterimeMove() {
 
-	public boolean allNeighboursAreSafe(MapCell cell) {
-		if (cell.getNumberOfAdjacentNettles() == 0) {
-			return false;
-		}
-		return map.getFlaggedNeighbours(cell).size() == cell.getNumberOfAdjacentNettles();
-	}
+        if (!singlePointMove()) {
+            randomMove();
+        }
 
-	public boolean allNeighboursAreNettels(MapCell cell) {
-		if (cell.getNumberOfAdjacentNettles() == 0 || map.getHiddenNeighbours(cell).size() == 0) {
-			return false;
-		}
-		return map.getHiddenNeighbours(cell).size() == cell.getNumberOfAdjacentNettles()
-				- map.getFlaggedNeighbours(cell).size();
-	}
+    }
+
+    public boolean allNeighboursAreSafe(MapCell cell) {
+
+        // this is not strictly true, but we use it to avoid infinite loops
+        if (cell.getNumberOfAdjacentNettles() == 0) {
+            return false;
+        }
+        return map.getFlaggedNeighbours(cell).size() == cell.getNumberOfAdjacentNettles();
+    }
+
+    public boolean allNeighboursAreNettels(MapCell cell) {
+
+        if (cell.getNumberOfAdjacentNettles() == 0 || map.getHiddenNeighbours(cell).size() == 0) {
+            return false;
+        }
+
+        return map.getHiddenNeighbours(cell)
+                .size() == (cell.getNumberOfAdjacentNettles() - map.getFlaggedNeighbours(cell).size());
+    }
 
 }
