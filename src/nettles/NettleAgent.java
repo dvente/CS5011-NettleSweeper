@@ -13,7 +13,7 @@ public class NettleAgent {
     public NettleAgent(Map map) {
         this.map = map;
         // strat = new RandomGuessStrategy(this,map);
-        strat = new SinglePointStrategy(this, this.map, map.getHiddenCells());
+        strat = new EasyEquationStrategy(this, this.map, map.getHiddenCells());
     }
 
     public void firstMove() {
@@ -36,7 +36,7 @@ public class NettleAgent {
 
         if (map.getCellAt(i, j).isHidden()) {
             if (NettleGame.verbose) {
-                System.out.println(NettleGame.tabs + "Flagging :" + map.getCellAt(i, j).toString());
+                System.out.println(NettleGame.tabs + "Flagging: " + map.getCellAt(i, j).toString());
             }
             map.getCellAt(i, j).setFlagged(true);
         }

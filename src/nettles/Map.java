@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
@@ -30,6 +32,21 @@ public class Map extends Observable {
         this.numberOfHiddenCells -= 1;
     }
 
+    
+    public List<MapCell> getRevealedCells() {
+
+        List<MapCell> answer = new ArrayList<MapCell>();
+        for (int i = 0; i < getMapLength(); i++) {
+            for (int j = 0; j < getMapWidth(); j++) {
+                if (!getCellAt(i, j).isHidden()) {
+                	assert !getCellAt(i, j).isHidden();
+                    answer.add(getCellAt(i, j));
+                }
+
+            }
+        }
+        return answer;
+    }
     public List<MapCell> getHiddenCells() {
 
         List<MapCell> answer = new ArrayList<MapCell>();
@@ -42,6 +59,19 @@ public class Map extends Observable {
             }
         }
         return answer;
+    }
+    
+    public Collection<MapCell> getFronteir(){
+    	Collection<MapCell> answer = new HashSet<MapCell>();
+    	for (MapCell[] row : map) {
+    		for(MapCell cell: row) {
+    			if(getHiddenNeighbours(cell).size() > 0) {
+    				answer.add(cell);
+    			}
+    		}
+			
+		}
+    	return answer;
     }
 
     // The next functions were taken from the A2 practical
@@ -159,34 +189,60 @@ public class Map extends Observable {
     }
 
     public List<MapCell> getHiddenNeighbours(MapCell cell) {
+		List<MapCell> answer = new LinkedList<MapCell>();
+//        List<MapCell> answer = getNeighbours(cell);
+//        List<MapCell> toRemove = new LinkedList<MapCell>();
+//        for (MapCell mapCell : answer) {
+//			if(!mapCell.isHidden() && !mapCell.isFlagged()) {
+//				toRemove.add(mapCell);
+//			}
+//		}
+//        answer.removeAll(toRemove);
 
-        List<MapCell> answer = new LinkedList<MapCell>();
 
         for (int k = -1; k < 2; k++) {
             for (int l = -1; l < 2; l++) {
-                if (cell.getI() + k >= 0 && cell.getI() + k < getMapLength() && cell.getJ() + l >= 0
-                        && cell.getJ() + l < getMapWidth() && getCellAt(cell.getI() + k, cell.getJ() + l).isHidden()) {
+                if (cell.getI() + k >= 0 
+                		&& cell.getI() + k < getMapLength() && cell.getJ() + l >= 0
+                        && cell.getJ() + l < getMapWidth() 
+                        && getCellAt(cell.getI() + k, cell.getJ() + l).isHidden()
+                        && !getCellAt(cell.getI() + k, cell.getJ() + l).isFlagged()) {
                     answer.add(getCellAt(cell.getI() + k, cell.getJ() + l));
                 }
             }
         }
+//        for (MapCell mapCell : answer) {
+//			assert cell.isHidden(): cell;
+//		}
+        
         return answer;
     }
 
     public List<MapCell> getFlaggedNeighbours(MapCell cell) {
 
-        List<MapCell> answer = new LinkedList<MapCell>();
-
-        for (int k = -1; k < 2; k++) {
-            for (int l = -1; l < 2; l++) {
-                if (cell.getI() + k >= 0 && cell.getI() + k < getMapLength() && cell.getJ() + l >= 0
-                        && cell.getJ() + l < getMapWidth() && getCellAt(cell.getI() + k, cell.getJ() + l).isFlagged()) {
-                    answer.add(getCellAt(cell.getI() + k, cell.getJ() + l));
-                }
-            }
-        }
+//        List<MapCell> answer = new LinkedList<MapCell>();
+        List<MapCell> answer = getNeighbours(cell);
+        List<MapCell> toRemove = new LinkedList<MapCell>();
+        for (MapCell mapCell : answer) {
+			if(!mapCell.isFlagged()) {
+				toRemove.add(mapCell);
+			}
+		}
+        answer.removeAll(toRemove);
+//        for (int k = -1; k < 2; k++) {
+//            for (int l = -1; l < 2; l++) {
+//                if (cell.getI() + k >= 0 && cell.getI() + k < getMapLength() && cell.getJ() + l >= 0
+//                        && cell.getJ() + l < getMapWidth() && getCellAt(cell.getI() + k, cell.getJ() + l).isFlagged()) {
+//                    answer.add(getCellAt(cell.getI() + k, cell.getJ() + l));
+//                }
+//            }
+//        }
 
         return answer;
+    }
+    
+    public int probe(MapCell cell) {
+    	return probe(cell.getI(), cell.getJ());
     }
 
     public int probe(int i, int j) {
@@ -207,6 +263,12 @@ public class Map extends Observable {
         this.numberOfNettels = numberOfNettels;
     }
 
+    public void flag(MapCell cell) {
+
+        flag(cell.getI(), cell.getJ());
+
+    }
+    
     public void flag(int i, int j) {
 
         MapCell flagedCell = getCellAt(i, j);
