@@ -9,28 +9,37 @@ public class NettleGame implements Observer {
     private Map map;
     private boolean gameOver = false;
     private boolean failed = false;
-    public static final boolean verbose = false;
+    private static final boolean verbose = true;
     public static String tabs = "";
 
     NettleAgent agent;
+
+    public static void prettyPrint(String str) {
+
+        System.out.println(tabs + str);
+    }
+
+    public static void printIfVerbose(String str) {
+
+        if (verbose) {
+            prettyPrint(str);
+        }
+    }
 
     private void endGame() {
 
         String tabs = "\t\t";
         gameOver = true;
         if (failed) {
-            if (verbose) {
-                System.out.println(tabs + "GAME OVER");
-            }
+            printIfVerbose("GAME OVER");
         } else {
-            if (verbose) {
-                System.out.println(tabs + "YOU WON! CONGLATURATIONS!");
-            }
+            printIfVerbose("YOU WON! CONGLATURATIONS!");
 
         }
-        System.out.println(tabs + "Final number of random guesses: " + Integer.toString(agent.getRandomGuessCounter()));
-        System.out.println(tabs + "Final number of probes: " + Integer.toString(agent.getProbeCounter()));
-        System.out.println(tabs + "Sucseeded: " + !failed);
+        prettyPrint("Final number of random guesses: " + Integer.toString(agent.getRandomGuessCounter()));
+        prettyPrint("Final number of probes: " + Integer.toString(agent.getProbeCounter()));
+        prettyPrint("Sucseeded: " + !failed);
+        assert !failed;
 
     }
 
@@ -88,11 +97,11 @@ public class NettleGame implements Observer {
     //
     // }
 
-    public void flag(int i, int j) {
-
-        map.getCellAt(i, j).setFlagged(true);
-
-    }
+    // public void flag(int i, int j) {
+    //
+    // map.getCellAt(i, j).setFlagged(true);
+    //
+    // }
 
     @Override
     public void update(Observable o, Object arg) {
@@ -116,5 +125,3 @@ public class NettleGame implements Observer {
     }
 
 }
-
-// end of functions taken from A2 practical

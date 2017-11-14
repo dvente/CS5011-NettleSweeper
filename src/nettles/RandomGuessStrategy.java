@@ -44,8 +44,7 @@ public class RandomGuessStrategy implements Strategy {
     @Override
     public void randomMove() {
 
-        // System.out.println(NettleGame.tabs + "Making random move");
-        assert false;
+        NettleGame.printIfVerbose("Making random move");
         MapCell cell = hiddenCells.get(rng.nextInt(hiddenCells.size()));
         incrRandomGuessCounter();
         agent.probe(cell);

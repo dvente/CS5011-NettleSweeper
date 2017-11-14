@@ -10,9 +10,7 @@ public class SinglePointStrategy extends RandomGuessStrategy implements Strategy
 
     protected boolean singlePointMove() {
 
-        if (NettleGame.verbose) {
-            System.out.println(NettleGame.tabs + "SPS");
-        }
+        NettleGame.printIfVerbose("SPS");
         for (MapCell cell : map.getRevealedCells()) {
             // System.out.println(NettleGame.tabs + "Checking cell: " +
             // cell.toString());

@@ -20,8 +20,6 @@ public class Map extends Observable {
     private int mapWidth = -1;
     private int numberOfNettels = -1;
 
-    // private List<Observer> observers;
-
     public int getNumberOfHiddenCells() {
 
         return numberOfHiddenCells;
@@ -70,6 +68,7 @@ public class Map extends Observable {
                     answer.add(cell);
                 }
             }
+
         }
         return answer;
     }
@@ -103,16 +102,11 @@ public class Map extends Observable {
         }
         checkWorld();
         numberOfHiddenCells = getMapLength() * getMapWidth();
-        if (NettleGame.verbose) {
-            printMap();
-        }
 
     }
 
     public void printMap() {
 
-        // System.out.println(NettleGame.tabs + "number of nettles: " +
-        // Integer.toString(numberOfNettels));
         for (int i = 0; i < getMapLength(); i++) {
             System.out.print(NettleGame.tabs);
             for (int j = 0; j < getMapWidth(); j++) {

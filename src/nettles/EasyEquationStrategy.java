@@ -55,22 +55,14 @@ public class EasyEquationStrategy extends SinglePointStrategy implements Strateg
 
         Collection<MapCell> frontier = map.getFronteir();
         for (Pair<MapCell, MapCell> pair : enumirateAdjacentPairs(frontier, frontier)) {
-            if (NettleGame.verbose) {
-                System.out.println(NettleGame.tabs + "EES");
-            }
+            NettleGame.printIfVerbose("EES");
 
             MapCell A = pair.getKey();
             MapCell B = pair.getValue();
-            if (NettleGame.verbose) {
-                System.out.println(NettleGame.tabs + "[A,B]: [" + A.toString() + "," + B.toString() + "]");
-            }
+            NettleGame.printIfVerbose("[A,B]: [" + A.toString() + "," + B.toString() + "]");
             List<MapCell> copy = map.getHiddenNeighbours(A);
             copy.addAll(map.getHiddenNeighbours(B));
-            if (NettleGame.verbose) {
-                System.out.println(NettleGame.tabs + "Fronteir union: " + copy.toString());
-                System.out.println(isASubsetB(map.getHiddenNeighbours(A), map.getHiddenNeighbours(B)));
-                System.out.println(isASubsetB(map.getHiddenNeighbours(B), map.getHiddenNeighbours(A)));
-            }
+
             if (!(isASubsetB(map.getHiddenNeighbours(A), map.getHiddenNeighbours(B))
                     || isASubsetB(map.getHiddenNeighbours(B), map.getHiddenNeighbours(A)))) {
                 continue;

@@ -24,9 +24,7 @@ public class NettleAgent {
     public void flag(MapCell cell) {
 
         if (map.getCellAt(cell.getI(), cell.getJ()).isHidden()) {
-            if (NettleGame.verbose) {
-                System.out.println(NettleGame.tabs + "Flagging :" + cell.toString());
-            }
+            NettleGame.printIfVerbose("Flagging :" + cell.toString());
             map.getCellAt(cell.getI(), cell.getJ()).setFlagged(true);
         }
 
@@ -35,9 +33,7 @@ public class NettleAgent {
     public void flag(int i, int j) {
 
         if (map.getCellAt(i, j).isHidden()) {
-            if (NettleGame.verbose) {
-                System.out.println(NettleGame.tabs + "Flagging: " + map.getCellAt(i, j).toString());
-            }
+            NettleGame.printIfVerbose("Flagging: " + map.getCellAt(i, j).toString());
             map.getCellAt(i, j).setFlagged(true);
         }
 
@@ -46,9 +42,7 @@ public class NettleAgent {
     public int probe(int i, int j) {
 
         if (!map.getCellAt(i, j).isFlagged() && map.getCellAt(i, j).isHidden()) {
-            if (NettleGame.verbose) {
-                System.out.println(NettleGame.tabs + "Probing: " + map.getCellAt(i, j).toString());
-            }
+            NettleGame.printIfVerbose("Probing: " + map.getCellAt(i, j).toString());
             incrProbeCounter();
             return map.revealCell(map.getCellAt(i, j));
         } else {
@@ -61,9 +55,7 @@ public class NettleAgent {
 
         if (!map.getCellAt(cell.getI(), cell.getJ()).isFlagged()
                 && map.getCellAt(cell.getI(), cell.getJ()).isHidden()) {
-            if (NettleGame.verbose) {
-                System.out.println(NettleGame.tabs + "Probing: " + cell.toString());
-            }
+            NettleGame.printIfVerbose("Probing: " + cell.toString());
             incrProbeCounter();
             return map.revealCell(map.getCellAt(cell.getI(), cell.getJ()));
         } else {
