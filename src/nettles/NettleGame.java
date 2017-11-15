@@ -9,7 +9,7 @@ public class NettleGame implements Observer {
     private Map map;
     private boolean gameOver = false;
     private boolean failed = false;
-    private static final boolean verbose = true;
+    private static final boolean verbose = false;
     public static String tabs = "";
 
     NettleAgent agent;
@@ -28,7 +28,7 @@ public class NettleGame implements Observer {
 
     private void endGame() {
 
-        String tabs = "\t\t";
+        tabs = "\t\t";
         gameOver = true;
         if (failed) {
             printIfVerbose("GAME OVER");
@@ -57,6 +57,7 @@ public class NettleGame implements Observer {
     public NettleGame(File mapFile) {
         map = new Map(mapFile, this);
         agent = new NettleAgent(this.map);
+        tabs = "\t\t\t";
         gameLoop();
 
     }
