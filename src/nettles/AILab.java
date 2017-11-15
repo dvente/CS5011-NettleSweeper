@@ -50,9 +50,9 @@ public class AILab {
         tabs = "";
 
         try {
-            //            runAllExperiments(testingDir);
-            runSingleExperiment(new File(testingDir + File.separator + "medium" + File.separator + "nworld5"),
-                    StrategyType.EASY_EQUATION);
+                        runAllExperiments(testingDir);
+//            runSingleExperiment(new File(testingDir + File.separator + "medium" + File.separator + "nworld5"),
+//                    StrategyType.EASY_EQUATION);
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

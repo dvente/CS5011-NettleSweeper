@@ -28,7 +28,7 @@ public class NettleGame {
         }
     }
 
-    private void endGame() {
+    private void report() {
 
         tabs = "\t\t\t";
         agent.setDone(true);
@@ -44,9 +44,8 @@ public class NettleGame {
 
         agent.firstMove();
         agent.makeMove();
-        if (!failed) {
-            endGame();
-        }
+        report();
+        
     }
 
     public NettleGame(NettleAgent agent, int[][] world, int numberOfNettles, boolean verbose) {
@@ -88,7 +87,7 @@ public class NettleGame {
         int numbOfNettles = world[cell.getI()][cell.getJ()];
         if (numbOfNettles == -1) {
             failed = true;
-            endGame();
+            agent.setDone(true);
         }
         return numbOfNettles;
 
