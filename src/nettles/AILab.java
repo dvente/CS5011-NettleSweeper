@@ -14,7 +14,7 @@ public class AILab {
     public static String tabs = "";
     private int[][] world;
     private int numberOfNettles;
-    private boolean verbose = false;
+    private boolean verbose = true;
 
     public static void main(String[] args) {
 
@@ -50,9 +50,9 @@ public class AILab {
         tabs = "";
 
         try {
-            runAllExperiments(testingDir);
-            //            runSingleExperiment(new File(testingDir + File.separator + "medium" + File.separator + "nworld2"),
-            //                    StrategyType.EASY_EQUATION);
+            //            runAllExperiments(testingDir);
+            runSingleExperiment(new File(testingDir + File.separator + "medium" + File.separator + "nworld5"),
+                    StrategyType.EASY_EQUATION);
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

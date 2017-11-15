@@ -8,6 +8,11 @@ public class NettleGame {
     private static boolean verbose;
     public static String tabs = "";
 
+    public static boolean getVerbose() {
+
+        return verbose;
+    }
+
     NettleAgent agent;
     private int numberOfNettles;
 

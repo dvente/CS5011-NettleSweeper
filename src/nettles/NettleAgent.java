@@ -93,7 +93,9 @@ public class NettleAgent {
 
         NettleGame.printIfVerbose("Flagging: " + cell.toString());
         kb.flag(cell);
-        //        kb.printMap();
+        if (NettleGame.getVerbose()) {
+            kb.printMap();
+        }
 
     }
 
@@ -108,6 +110,9 @@ public class NettleAgent {
         NettleGame.printIfVerbose("Revealing: " + cell.toString());
         int numberOfNettles = game.probe(cell);
         kb.reveal(cell, numberOfNettles);
+        if (NettleGame.getVerbose()) {
+            kb.printMap();
+        }
         if (numberOfNettles == 0) {
             for (MapCell safeNeighbour : kb.getHiddenNeighbours(cell)) {
                 reveal(safeNeighbour);
@@ -133,7 +138,9 @@ public class NettleAgent {
         incrProbeCounter();
         int numb = game.probe(cell);
         kb.reveal(cell, numb);
-        //        kb.printMap();
+        if (NettleGame.getVerbose()) {
+            kb.printMap();
+        }
         if (numb == 0) {
             for (MapCell safeNeighbour : kb.getHiddenNeighbours(cell)) {
                 probe(safeNeighbour);
