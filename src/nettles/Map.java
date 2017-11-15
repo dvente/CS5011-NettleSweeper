@@ -20,16 +20,6 @@ public class Map extends Observable {
     private int mapWidth = -1;
     private int numberOfNettels = -1;
 
-    public int getNumberOfHiddenCells() {
-
-        return numberOfHiddenCells;
-    }
-
-    public void decrNumberOfHiddenCells() {
-
-        this.numberOfHiddenCells -= 1;
-    }
-
     public List<MapCell> getRevealedCells() {
 
         List<MapCell> answer = new ArrayList<MapCell>();
@@ -43,6 +33,20 @@ public class Map extends Observable {
             }
         }
         return answer;
+    }
+
+    public int getNumberOfHiddenCells() {
+
+        int counter = 0;
+        for (int i = 0; i < getMapLength(); i++) {
+            for (int j = 0; j < getMapWidth(); j++) {
+                if (getCellAt(i, j).isHidden() && !getCellAt(i, j).isFlagged()) {
+                    counter++;
+                }
+
+            }
+        }
+        return counter;
     }
 
     public List<MapCell> getHiddenCells() {
@@ -76,6 +80,7 @@ public class Map extends Observable {
     // The next functions were taken from the A2 practical
     public Map(File file) {
         super();
+
         try (BufferedReader in = new BufferedReader(new FileReader(file));) {
             mapLength = Integer.parseInt(in.readLine().trim());
             mapWidth = Integer.parseInt(in.readLine().trim());
@@ -183,14 +188,6 @@ public class Map extends Observable {
     public List<MapCell> getHiddenNeighbours(MapCell cell) {
 
         List<MapCell> answer = new LinkedList<MapCell>();
-        // List<MapCell> answer = getNeighbours(cell);
-        // List<MapCell> toRemove = new LinkedList<MapCell>();
-        // for (MapCell mapCell : answer) {
-        // if(!mapCell.isHidden() && !mapCell.isFlagged()) {
-        // toRemove.add(mapCell);
-        // }
-        // }
-        // answer.removeAll(toRemove);
 
         for (int k = -1; k < 2; k++) {
             for (int l = -1; l < 2; l++) {
@@ -201,16 +198,12 @@ public class Map extends Observable {
                 }
             }
         }
-        // for (MapCell mapCell : answer) {
-        // assert cell.isHidden(): cell;
-        // }
 
         return answer;
     }
 
     public List<MapCell> getFlaggedNeighbours(MapCell cell) {
 
-        // List<MapCell> answer = new LinkedList<MapCell>();
         List<MapCell> answer = getNeighbours(cell);
         List<MapCell> toRemove = new LinkedList<MapCell>();
         for (MapCell mapCell : answer) {
@@ -219,16 +212,6 @@ public class Map extends Observable {
             }
         }
         answer.removeAll(toRemove);
-        // for (int k = -1; k < 2; k++) {
-        // for (int l = -1; l < 2; l++) {
-        // if (cell.getI() + k >= 0 && cell.getI() + k < getMapLength() &&
-        // cell.getJ() + l >= 0
-        // && cell.getJ() + l < getMapWidth() && getCellAt(cell.getI() + k,
-        // cell.getJ() + l).isFlagged()) {
-        // answer.add(getCellAt(cell.getI() + k, cell.getJ() + l));
-        // }
-        // }
-        // }
 
         return answer;
     }
@@ -265,8 +248,12 @@ public class Map extends Observable {
     public void flag(int i, int j) {
 
         MapCell flagedCell = getCellAt(i, j);
-        flagedCell.setFlagged(true);
-        notifyObservers(flagedCell);
+        if (flagedCell.isHidden() && !flagedCell.isFlagged()) {
+            NettleGame.printIfVerbose("Flagging: " + flagedCell.toString());
+            flagedCell.setFlagged(true);
+            setChanged();
+            notifyObservers(flagedCell);
+        }
 
     }
 

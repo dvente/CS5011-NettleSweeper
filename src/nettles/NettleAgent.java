@@ -7,15 +7,13 @@ public class NettleAgent {
 
     Map map;
     Strategy strat;
-    private int randomGuessCounter = 0;
     private int probeCounter = 0;
+    private int flagCounter = 0;
 
     public NettleAgent(Map map, Strategy strat) {
 
         this.map = map;
-        // strat = new RandomGuessStrategy(this,map);
-        this.strat = strat; // new EasyEquationStrategy(this, this.map,
-                            // map.getHiddenCells());
+        this.strat = strat;
     }
 
     public void firstMove() {
@@ -25,19 +23,8 @@ public class NettleAgent {
 
     public void flag(MapCell cell) {
 
-        if (map.getCellAt(cell.getI(), cell.getJ()).isHidden()) {
-            NettleGame.printIfVerbose("Flagging :" + cell.toString());
-            map.getCellAt(cell.getI(), cell.getJ()).setFlagged(true);
-        }
-
-    }
-
-    public void flag(int i, int j) {
-
-        if (map.getCellAt(i, j).isHidden()) {
-            NettleGame.printIfVerbose("Flagging: " + map.getCellAt(i, j).toString());
-            map.getCellAt(i, j).setFlagged(true);
-        }
+        incrFlagCounter();
+        map.flag(cell);
 
     }
 
@@ -69,6 +56,9 @@ public class NettleAgent {
     public void makeMove() {
 
         for (MapCell move : strat.deterimeMove()) {
+            if (NettleGame.gameOver) {
+                return;
+            }
             if (strat.shouldProbe()) {
                 probe(move);
             } else {
@@ -96,6 +86,16 @@ public class NettleAgent {
     public void incrProbeCounter() {
 
         probeCounter += 1;
+    }
+
+    public int getFlagCounter() {
+
+        return flagCounter;
+    }
+
+    public void incrFlagCounter() {
+
+        flagCounter += 1;
     }
 
 }

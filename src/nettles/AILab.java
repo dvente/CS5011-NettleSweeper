@@ -79,7 +79,7 @@ public class AILab {
         Map map = new Map(new File(dataDir + File.separator + "map.txt"));
         Strategy strat = type.getC().getConstructor(Map.class, List.class).newInstance(map, map.getHiddenCells());
         NettleAgent agent = new NettleAgent(map, strat);
-        new NettleGame(agent, map);
+        new NettleGame(agent, map, true);
 
     }
 
