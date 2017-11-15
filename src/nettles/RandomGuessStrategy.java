@@ -1,9 +1,10 @@
 package nettles;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class RandomGuessStrategy implements Strategy {
+public class RandomGuessStrategy extends AbstractStrategy implements Strategy {
 
     Random rng;
     Map map;
@@ -12,8 +13,9 @@ public class RandomGuessStrategy implements Strategy {
     private int mapWidth;
     private List<MapCell> hiddenCells = null;
     private int randomGuessCounter = 0;
+    private boolean shouldProbe = true;
 
-    public RandomGuessStrategy(NettleAgent agent, Map map, List<MapCell> hiddenCells) {
+    public RandomGuessStrategy(Map map, List<MapCell> hiddenCells) {
         super();
         rng = new Random();
         this.agent = agent;
@@ -23,9 +25,11 @@ public class RandomGuessStrategy implements Strategy {
     }
 
     @Override
-    public void deterimeMove() {
+    public List<MapCell> deterimeMove() {
 
-        randomMove();
+        List<MapCell> answer = new ArrayList<MapCell>();
+        answer = randomMove();
+        return answer;
 
     }
 
@@ -42,12 +46,27 @@ public class RandomGuessStrategy implements Strategy {
     }
 
     @Override
-    public void randomMove() {
+    public List<MapCell> randomMove() {
 
+        assert new Random().nextBoolean();
+        List<MapCell> answer = new ArrayList<MapCell>();
         NettleGame.printIfVerbose("Making random move");
+        // System.out.println("MAKEING RANDOM MOVE");
         MapCell cell = hiddenCells.get(rng.nextInt(hiddenCells.size()));
         incrRandomGuessCounter();
-        agent.probe(cell);
+        answer.add(cell);
+        return answer;
+    }
+
+    @Override
+    public boolean shouldProbe() {
+
+        return shouldProbe;
+    }
+
+    public void setShouldProbe(boolean shouldProbe) {
+
+        this.shouldProbe = shouldProbe;
     }
 
 }

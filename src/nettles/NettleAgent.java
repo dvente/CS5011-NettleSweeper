@@ -10,10 +10,12 @@ public class NettleAgent {
     private int randomGuessCounter = 0;
     private int probeCounter = 0;
 
-    public NettleAgent(Map map) {
+    public NettleAgent(Map map, Strategy strat) {
+
         this.map = map;
         // strat = new RandomGuessStrategy(this,map);
-        strat = new EasyEquationStrategy(this, this.map, map.getHiddenCells());
+        this.strat = strat; // new EasyEquationStrategy(this, this.map,
+                            // map.getHiddenCells());
     }
 
     public void firstMove() {
@@ -66,7 +68,14 @@ public class NettleAgent {
 
     public void makeMove() {
 
-        strat.deterimeMove();
+        for (MapCell move : strat.deterimeMove()) {
+            if (strat.shouldProbe()) {
+                probe(move);
+            } else {
+                flag(move);
+            }
+        }
+
     }
 
     public int getRandomGuessCounter() {

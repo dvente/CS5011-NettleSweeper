@@ -1,5 +1,6 @@
 package nettles;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,8 +10,10 @@ import javafx.util.Pair;
 
 public class EasyEquationStrategy extends SinglePointStrategy implements Strategy {
 
-    public EasyEquationStrategy(NettleAgent agent, Map map, List<MapCell> hiddenCells) {
-        super(agent, map, hiddenCells);
+    private boolean shouldProbe = true;
+
+    public EasyEquationStrategy(Map map, List<MapCell> hiddenCells) {
+        super(map, hiddenCells);
     }
 
     public static Collection<Pair<MapCell, MapCell>> enumirateAdjacentPairs(Collection<MapCell> first,
@@ -51,11 +54,11 @@ public class EasyEquationStrategy extends SinglePointStrategy implements Strateg
 
     }
 
-    protected boolean easyEquationMove() {
+    protected List<MapCell> easyEquationMove() {
 
+        List<MapCell> answer = new ArrayList<MapCell>();
         Collection<MapCell> frontier = map.getFronteir();
         for (Pair<MapCell, MapCell> pair : enumirateAdjacentPairs(frontier, frontier)) {
-            NettleGame.printIfVerbose("EES");
 
             MapCell A = pair.getKey();
             MapCell B = pair.getValue();
@@ -84,15 +87,16 @@ public class EasyEquationStrategy extends SinglePointStrategy implements Strateg
             for (Iterator iterator = setDifferenceNeighbours.iterator(); iterator.hasNext();) {
                 MapCell C = (MapCell) iterator.next();
                 if (diff == 0) {
-                    agent.probe(C);
+                    answer.add(C);
+                    setShouldProbe(true);
                 } else {
-                    agent.flag(C);
+                    answer.add(C);
+                    setShouldProbe(false);
                 }
-                return true;
             }
         }
 
-        return false;
+        return answer;
     }
 
     private boolean isASubsetB(Collection<MapCell> A, Collection<MapCell> B) {
@@ -101,13 +105,17 @@ public class EasyEquationStrategy extends SinglePointStrategy implements Strateg
     }
 
     @Override
-    public void deterimeMove() {
+    public List<MapCell> deterimeMove() {
 
-        if (!singlePointMove()) {
-            if (!easyEquationMove()) {
-                randomMove();
-            }
+        List<MapCell> answer = easyEquationMove();
+        if (answer.isEmpty()) {
+            answer = singlePointMove();
         }
+        if (answer.isEmpty()) {
+            answer = randomMove();
+        }
+        return answer;
+
     }
 
 }

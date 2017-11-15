@@ -1,41 +1,44 @@
 package nettles;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SinglePointStrategy extends RandomGuessStrategy implements Strategy {
 
-    public SinglePointStrategy(NettleAgent agent, Map map, List<MapCell> hiddenCells) {
-        super(agent, map, hiddenCells);
+    private boolean shouldProbe = true;
+
+    public SinglePointStrategy(Map map, List<MapCell> hiddenCells) {
+        super(map, hiddenCells);
     }
 
-    protected boolean singlePointMove() {
+    protected List<MapCell> singlePointMove() {
 
-        NettleGame.printIfVerbose("SPS");
+        List<MapCell> answer = new ArrayList<MapCell>();
         for (MapCell cell : map.getRevealedCells()) {
-            // System.out.println(NettleGame.tabs + "Checking cell: " +
-            // cell.toString());
             if (allNeighboursAreSafe(cell) && map.getHiddenNeighbours(cell).size() != 0) {
-
                 for (MapCell mapCell : map.getHiddenNeighbours(cell)) {
-                    agent.probe(mapCell);
+                    answer.add(mapCell);
+                    setShouldProbe(true);
                 }
-                return true;
             } else if (allNeighboursAreNettels(cell)) {
                 for (MapCell mapCell : map.getHiddenNeighbours(cell)) {
-                    agent.flag(mapCell);
+                    answer.add(mapCell);
+                    setShouldProbe(false);
                 }
-                return true;
             }
         }
-        return false;
+        return answer;
     }
 
     @Override
-    public void deterimeMove() {
+    public List<MapCell> deterimeMove() {
 
-        if (!singlePointMove()) {
-            randomMove();
+        List<MapCell> answer = singlePointMove();
+
+        if (answer.isEmpty()) {
+            answer = randomMove();
         }
+        return answer;
 
     }
 
@@ -45,6 +48,7 @@ public class SinglePointStrategy extends RandomGuessStrategy implements Strategy
         if (cell.getNumberOfAdjacentNettles() == 0) {
             return false;
         }
+
         return map.getFlaggedNeighbours(cell).size() == cell.getNumberOfAdjacentNettles();
     }
 

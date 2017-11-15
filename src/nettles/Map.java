@@ -74,10 +74,8 @@ public class Map extends Observable {
     }
 
     // The next functions were taken from the A2 practical
-    public Map(File file, NettleGame game) {
+    public Map(File file) {
         super();
-        addObserver(game);
-
         try (BufferedReader in = new BufferedReader(new FileReader(file));) {
             mapLength = Integer.parseInt(in.readLine().trim());
             mapWidth = Integer.parseInt(in.readLine().trim());

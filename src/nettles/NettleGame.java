@@ -1,6 +1,5 @@
 package nettles;
 
-import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -9,7 +8,7 @@ public class NettleGame implements Observer {
     private Map map;
     private boolean gameOver = false;
     private boolean failed = false;
-    private static final boolean verbose = false;
+    private static final boolean verbose = true;
     public static String tabs = "";
 
     NettleAgent agent;
@@ -39,7 +38,6 @@ public class NettleGame implements Observer {
         prettyPrint("Final number of random guesses: " + Integer.toString(agent.getRandomGuessCounter()));
         prettyPrint("Final number of probes: " + Integer.toString(agent.getProbeCounter()));
         prettyPrint("Sucseeded: " + !failed);
-        assert !failed;
 
     }
 
@@ -54,29 +52,30 @@ public class NettleGame implements Observer {
         }
     }
 
-    public NettleGame(File mapFile) {
-        map = new Map(mapFile, this);
-        agent = new NettleAgent(this.map);
+    public NettleGame(NettleAgent agent, Map map) {
+        this.agent = agent;
+        this.map = map;
+        map.addObserver(this);
         tabs = "\t\t\t";
         gameLoop();
 
     }
 
-    public static void main(String[] args) {
-
-        assert args.length >= 1;
-        final File root = new File(args[0]);
-        for (final File difficultyDir : root.listFiles()) {
-            System.out.println("Difficulty: " + difficultyDir.getName());
-            for (final File mapDir : difficultyDir.listFiles()) {
-                File map = new File(mapDir.toString() + File.separator + "map.txt");
-                System.out.println("\t" + mapDir.getName());
-                new NettleGame(map);
-
-            }
-        }
-
-    }
+    // public static void main(String[] args) {
+    //
+    // assert args.length >= 1;
+    // final File root = new File(args[0]);
+    // for (final File difficultyDir : root.listFiles()) {
+    // System.out.println("Difficulty: " + difficultyDir.getName());
+    // for (final File mapDir : difficultyDir.listFiles()) {
+    // File map = new File(mapDir.toString() + File.separator + "map.txt");
+    // System.out.println("\t" + mapDir.getName());
+    // new NettleGame(map);
+    //
+    // }
+    // }
+    //
+    // }
     // public static void main(String[] args) {
     //
     // assert args.length >= 1;
