@@ -2,70 +2,60 @@ package nettles;
 
 public class NettleAgent {
 
-    // TODO agent should build internal map representation instead of what is
-    // curently happening
-
-    Map map;
-    Strategy strat;
+    private KnowledgeBase kb;
+    private Strategy strat = null;
+    private NettleGame game = null;
     private int probeCounter = 0;
-    private int flagCounter = 0;
+    private final int numberOfNettles;
+    private boolean done = false;
 
-    public NettleAgent(Map map, Strategy strat) {
+    public NettleAgent(KnowledgeBase kb, int numberOfNettels) {
+        this.kb = kb;
+        this.numberOfNettles = numberOfNettels;
+    }
 
-        this.map = map;
+    public void setGame(NettleGame game) {
+
+        this.game = game;
+    }
+
+    public void setStrat(Strategy strat) {
+
         this.strat = strat;
     }
 
     public void firstMove() {
 
-        probe(0, 0);
-    }
-
-    public void flag(MapCell cell) {
-
-        incrFlagCounter();
-        map.flag(cell);
-
-    }
-
-    public int probe(int i, int j) {
-
-        if (!map.getCellAt(i, j).isFlagged() && map.getCellAt(i, j).isHidden()) {
-            NettleGame.printIfVerbose("Probing: " + map.getCellAt(i, j).toString());
-            incrProbeCounter();
-            return map.revealCell(map.getCellAt(i, j));
-        } else {
-            return -1;
-        }
-
-    }
-
-    public int probe(MapCell cell) {
-
-        if (!map.getCellAt(cell.getI(), cell.getJ()).isFlagged()
-                && map.getCellAt(cell.getI(), cell.getJ()).isHidden()) {
-            NettleGame.printIfVerbose("Probing: " + cell.toString());
-            incrProbeCounter();
-            return map.revealCell(map.getCellAt(cell.getI(), cell.getJ()));
-        } else {
-            return -1;
-        }
-
+        probe(kb.getCellAt(0, 0));
     }
 
     public void makeMove() {
 
-        for (MapCell move : strat.deterimeMove()) {
-            if (NettleGame.gameOver) {
-                return;
-            }
-            if (strat.shouldProbe()) {
-                probe(move);
-            } else {
-                flag(move);
+        while (!done) {
+            for (MapCell move : strat.deterimeMove()) {
+                if (NettleGame.gameOver) {
+                    return;
+                }
+                if (strat.shouldProbe()) {
+                    probe(move);
+                } else {
+                    flag(move);
+                }
+                if (kb.getNumberOfHiddenCells() == numberOfNettles) {
+                    // we found every nettle, so reveal all the hidden cells
+                    for (MapCell cell : kb.getHiddenCells()) {
+                        probe(cell);
+                    }
+                    done = true;
+                }
             }
         }
 
+    }
+
+    public int getNumberOfFlaggedCells() {
+
+        return kb.getFlaggedCells().size();
     }
 
     public int getRandomGuessCounter() {
@@ -88,14 +78,75 @@ public class NettleAgent {
         probeCounter += 1;
     }
 
-    public int getFlagCounter() {
+    public boolean isDone() {
 
-        return flagCounter;
+        return done;
     }
 
-    public void incrFlagCounter() {
+    /**
+     * Flag the cell as containing a nettle
+     *
+     * @param cell
+     *            the cell to be flagged
+     */
+    public void flag(MapCell cell) {
 
-        flagCounter += 1;
+        NettleGame.printIfVerbose("Flagging: " + cell.toString());
+        kb.flag(cell);
+        //        kb.printMap();
+
+    }
+
+    /**
+     * same as probe but doesn't increase the count
+     *
+     * @param cell
+     *            the cell to be revealed
+     */
+    public void reveal(MapCell cell) {
+
+        NettleGame.printIfVerbose("Revealing: " + cell.toString());
+        int numberOfNettles = game.probe(cell);
+        kb.reveal(cell, numberOfNettles);
+        if (numberOfNettles == 0) {
+            for (MapCell safeNeighbour : kb.getHiddenNeighbours(cell)) {
+                reveal(safeNeighbour);
+            }
+
+        }
+    }
+
+    /**
+     * Reveals the cell, increases the probe counter and records the number of
+     * nettles
+     *
+     * @param cell
+     *            the cell to be probed
+     */
+    public void probe(MapCell cell) {
+
+        if (kb.getRevealedCells().contains(cell)) {
+            return;
+        }
+
+        NettleGame.printIfVerbose("Probing: " + cell.toString());
+        incrProbeCounter();
+        int numb = game.probe(cell);
+        kb.reveal(cell, numb);
+        //        kb.printMap();
+        if (numb == 0) {
+            for (MapCell safeNeighbour : kb.getHiddenNeighbours(cell)) {
+                probe(safeNeighbour);
+            }
+
+        }
+
+    }
+
+    public void setDone(boolean b) {
+
+        done = b;
+
     }
 
 }

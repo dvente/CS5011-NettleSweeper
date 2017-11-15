@@ -12,8 +12,8 @@ public class EasyEquationStrategy extends SinglePointStrategy implements Strateg
 
     private boolean shouldProbe = true;
 
-    public EasyEquationStrategy(Map map, List<MapCell> hiddenCells) {
-        super(map, hiddenCells);
+    public EasyEquationStrategy(KnowledgeBase kb) {
+        super(kb);
     }
 
     public static Collection<Pair<MapCell, MapCell>> enumirateAdjacentPairs(Collection<MapCell> first,
@@ -56,32 +56,33 @@ public class EasyEquationStrategy extends SinglePointStrategy implements Strateg
 
     protected List<MapCell> easyEquationMove() {
 
+        NettleGame.printIfVerbose("EES");
         List<MapCell> answer = new ArrayList<MapCell>();
-        Collection<MapCell> frontier = map.getFronteir();
+        Collection<MapCell> frontier = kb.getFronteir();
         for (Pair<MapCell, MapCell> pair : enumirateAdjacentPairs(frontier, frontier)) {
 
             MapCell A = pair.getKey();
             MapCell B = pair.getValue();
-            NettleGame.printIfVerbose("[A,B]: [" + A.toString() + "," + B.toString() + "]");
-            List<MapCell> copy = map.getHiddenNeighbours(A);
-            copy.addAll(map.getHiddenNeighbours(B));
+            //            NettleGame.printIfVerbose("[A,B]: [" + A.toString() + "," + B.toString() + "]");
+            List<MapCell> copy = kb.getHiddenNeighbours(A);
+            copy.addAll(kb.getHiddenNeighbours(B));
 
-            if (!(isASubsetB(map.getHiddenNeighbours(A), map.getHiddenNeighbours(B))
-                    || isASubsetB(map.getHiddenNeighbours(B), map.getHiddenNeighbours(A)))) {
+            if (!(isASubsetB(kb.getHiddenNeighbours(A), kb.getHiddenNeighbours(B))
+                    || isASubsetB(kb.getHiddenNeighbours(B), kb.getHiddenNeighbours(A)))) {
                 continue;
             }
             List<MapCell> superSet;
             List<MapCell> subSet;
-            if (isASubsetB(map.getHiddenNeighbours(A), map.getHiddenNeighbours(B))) {
-                superSet = map.getHiddenNeighbours(B);
-                subSet = map.getHiddenNeighbours(A);
+            if (isASubsetB(kb.getHiddenNeighbours(A), kb.getHiddenNeighbours(B))) {
+                superSet = kb.getHiddenNeighbours(B);
+                subSet = kb.getHiddenNeighbours(A);
             } else {
-                superSet = map.getHiddenNeighbours(A);
-                subSet = map.getHiddenNeighbours(B);
+                superSet = kb.getHiddenNeighbours(A);
+                subSet = kb.getHiddenNeighbours(B);
             }
 
-            int diff = Math.abs((A.getNumberOfAdjacentNettles() - map.getFlaggedNeighbours(A).size())
-                    - (B.getNumberOfAdjacentNettles() - map.getFlaggedNeighbours(B).size()));
+            int diff = Math.abs((A.getNumberOfAdjacentNettles() - kb.getFlaggedNeighbours(A).size())
+                    - (B.getNumberOfAdjacentNettles() - kb.getFlaggedNeighbours(B).size()));
             Collection<MapCell> setDifferenceNeighbours = superSet;
             setDifferenceNeighbours.removeAll(subSet);
             for (Iterator iterator = setDifferenceNeighbours.iterator(); iterator.hasNext();) {
@@ -107,9 +108,9 @@ public class EasyEquationStrategy extends SinglePointStrategy implements Strateg
     @Override
     public List<MapCell> deterimeMove() {
 
-        List<MapCell> answer = easyEquationMove();
+        List<MapCell> answer = singlePointMove();
         if (answer.isEmpty()) {
-            answer = singlePointMove();
+            answer = easyEquationMove();
         }
         if (answer.isEmpty()) {
             answer = randomMove();

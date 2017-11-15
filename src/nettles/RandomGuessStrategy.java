@@ -7,21 +7,16 @@ import java.util.Random;
 public class RandomGuessStrategy extends AbstractStrategy implements Strategy {
 
     Random rng;
-    Map map;
+    KnowledgeBase kb;
     NettleAgent agent;
-    private int mapLength;
-    private int mapWidth;
-    private List<MapCell> hiddenCells = null;
     private int randomGuessCounter = 0;
     private boolean shouldProbe = true;
 
-    public RandomGuessStrategy(Map map, List<MapCell> hiddenCells) {
+    public RandomGuessStrategy(KnowledgeBase kb) {
         super();
         rng = new Random();
         this.agent = agent;
-        this.map = map;
-        this.mapLength = map.getMapLength();
-        this.hiddenCells = hiddenCells;
+        this.kb = kb;
     }
 
     @Override
@@ -48,13 +43,20 @@ public class RandomGuessStrategy extends AbstractStrategy implements Strategy {
     @Override
     public List<MapCell> randomMove() {
 
-        assert new Random().nextBoolean();
         List<MapCell> answer = new ArrayList<MapCell>();
         NettleGame.printIfVerbose("Making random move");
-        // System.out.println("MAKEING RANDOM MOVE");
-        MapCell cell = hiddenCells.get(rng.nextInt(hiddenCells.size()));
+        int index = rng.nextInt(kb.getHiddenCells().size());
+        int loopCounter = 0;
+        for (MapCell cell : kb.getHiddenCells()) {
+            if (loopCounter < index) {
+                loopCounter++;
+                continue;
+            } else {
+                answer.add(cell);
+                break;
+            }
+        }
         incrRandomGuessCounter();
-        answer.add(cell);
         return answer;
     }
 

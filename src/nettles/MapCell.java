@@ -4,17 +4,17 @@ public class MapCell {
 
     private final int i;
     private final int j;
-    private final int numberOfAdjacentNettles;
-    private boolean hidden;
-    private boolean flagged;
+    private int numberOfAdjacentNettles;
+    //    private boolean hidden;
+    //    private boolean flagged;
 
     public MapCell(int i, int j, int adjacentNettles) {
         super();
         this.numberOfAdjacentNettles = adjacentNettles;
         this.i = i;
         this.j = j;
-        hidden = true;
-        setFlagged(false);
+        //        hidden = true;
+        //        setFlagged(false);
     }
 
     public int getI() {
@@ -25,20 +25,7 @@ public class MapCell {
     @Override
     public String toString() {
 
-        return "(" + j + "," + i + ")";// ["+getNumberOfAdjacentNettles()+"]";
-    }
-
-    public String toMapString() {
-
-        if (isHidden()) {
-            if (isFlagged()) {
-                return "  F";
-            } else {
-                return "  ?";
-            }
-        } else {
-            return String.format("%3d", getNumberOfAdjacentNettles());
-        }
+        return "(" + j + "," + i + ")";
     }
 
     @Override
@@ -88,24 +75,29 @@ public class MapCell {
         return numberOfAdjacentNettles;
     }
 
-    public boolean isHidden() {
+    public void setNumberOfAdjacentNettles(int numberOfAdjacentnettles) {
 
-        return hidden;
+        this.numberOfAdjacentNettles = numberOfAdjacentnettles;
     }
 
-    public void setHidden(boolean hidden) {
-
-        this.hidden = hidden;
-    }
-
-    public boolean isFlagged() {
-
-        return flagged;
-    }
-
-    public void setFlagged(boolean flagged) {
-
-        this.flagged = flagged;
-    }
+    //    public boolean isHidden() {
+    //
+    //        return hidden;
+    //    }
+    //
+    //    public void setHidden(boolean hidden) {
+    //
+    //        this.hidden = hidden;
+    //    }
+    //
+    //    public boolean isFlagged() {
+    //
+    //        return flagged;
+    //    }
+    //
+    //    public void setFlagged(boolean flagged) {
+    //
+    //        this.flagged = flagged;
+    //    }
 
 }

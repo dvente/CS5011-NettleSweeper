@@ -7,24 +7,26 @@ public class SinglePointStrategy extends RandomGuessStrategy implements Strategy
 
     private boolean shouldProbe = true;
 
-    public SinglePointStrategy(Map map, List<MapCell> hiddenCells) {
-        super(map, hiddenCells);
+    public SinglePointStrategy(KnowledgeBase kb) {
+        super(kb);
     }
 
     protected List<MapCell> singlePointMove() {
 
         List<MapCell> answer = new ArrayList<MapCell>();
-        for (MapCell cell : map.getRevealedCells()) {
-            if (allNeighboursAreSafe(cell) && map.getHiddenNeighbours(cell).size() != 0) {
-                for (MapCell mapCell : map.getHiddenNeighbours(cell)) {
+        for (MapCell cell : kb.getFronteir()) {
+            if (allNeighboursAreSafe(cell)) {
+                for (MapCell mapCell : kb.getHiddenNeighbours(cell)) {
                     answer.add(mapCell);
                     setShouldProbe(true);
                 }
+                return answer;
             } else if (allNeighboursAreNettels(cell)) {
-                for (MapCell mapCell : map.getHiddenNeighbours(cell)) {
+                for (MapCell mapCell : kb.getHiddenNeighbours(cell)) {
                     answer.add(mapCell);
                     setShouldProbe(false);
                 }
+                return answer;
             }
         }
         return answer;
@@ -49,17 +51,16 @@ public class SinglePointStrategy extends RandomGuessStrategy implements Strategy
             return false;
         }
 
-        return map.getFlaggedNeighbours(cell).size() == cell.getNumberOfAdjacentNettles();
+        return kb.getFlaggedNeighbours(cell).size() == cell.getNumberOfAdjacentNettles();
     }
 
     public boolean allNeighboursAreNettels(MapCell cell) {
 
-        if (cell.getNumberOfAdjacentNettles() == 0 || map.getHiddenNeighbours(cell).size() == 0) {
+        if (cell.getNumberOfAdjacentNettles() == 0 || kb.getHiddenNeighbours(cell).size() == 0) {
             return false;
         }
-
-        return map.getHiddenNeighbours(cell)
-                .size() == (cell.getNumberOfAdjacentNettles() - map.getFlaggedNeighbours(cell).size());
+        return kb.getHiddenNeighbours(cell)
+                .size() == (cell.getNumberOfAdjacentNettles() - kb.getFlaggedNeighbours(cell).size());
     }
 
 }

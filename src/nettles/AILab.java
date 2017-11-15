@@ -1,14 +1,20 @@
 package nettles;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
 public class AILab {
 
     private final File testingDir;
 
     public static String tabs = "";
+    private int[][] world;
+    private int numberOfNettles;
+    private boolean verbose = false;
 
     public static void main(String[] args) {
 
@@ -44,9 +50,9 @@ public class AILab {
         tabs = "";
 
         try {
-            // runAllExperiments(testingDir);
-            runSingleExperiment(new File(testingDir + File.separator + "medium" + File.separator + "nworld2"),
-                    StrategyType.SINGLE_POINT);
+            runAllExperiments(testingDir);
+            //            runSingleExperiment(new File(testingDir + File.separator + "medium" + File.separator + "nworld2"),
+            //                    StrategyType.EASY_EQUATION);
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -76,10 +82,14 @@ public class AILab {
         System.out.println(
                 tabs + "Running experiment: " + dataDir.getName() + " with strategy: " + type.getC().getName());
 
-        Map map = new Map(new File(dataDir + File.separator + "map.txt"));
-        Strategy strat = type.getC().getConstructor(Map.class, List.class).newInstance(map, map.getHiddenCells());
-        NettleAgent agent = new NettleAgent(map, strat);
-        new NettleGame(agent, map, true);
+        readWorld(new File(dataDir + File.separator + "map.txt"));
+        KnowledgeBase kb = new KnowledgeBase(world.length, world[0].length, numberOfNettles);
+        Strategy strat = type.getC().getConstructor(KnowledgeBase.class).newInstance(kb);
+        NettleAgent agent = new NettleAgent(kb, numberOfNettles);
+        NettleGame game = new NettleGame(agent, world, numberOfNettles, verbose);
+        agent.setGame(game);
+        agent.setStrat(strat);
+        game.startGame();
 
     }
 
@@ -108,6 +118,34 @@ public class AILab {
             runSingleExperiment(dataDir, type);
         }
 
+    }
+
+    public int[][] readWorld(File file) {
+
+        try (BufferedReader in = new BufferedReader(new FileReader(file));) {
+            int mapLength = Integer.parseInt(in.readLine().trim());
+            int mapWidth = Integer.parseInt(in.readLine().trim());
+            int numberOfNettels = Integer.parseInt(in.readLine().trim());
+            world = new int[mapLength][mapWidth];
+            String line;
+            String[] splitLine;
+
+            for (int i = 0; i < mapLength; i++) {
+                line = in.readLine();
+                splitLine = line.split(",");
+                for (int j = 0; j < mapWidth; j++) {
+                    world[i][j] = Integer.parseInt(splitLine[j].trim());
+                }
+            }
+            return world;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.exit(1);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return null;
     }
 
 }

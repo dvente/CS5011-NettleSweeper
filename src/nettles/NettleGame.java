@@ -1,17 +1,15 @@
 package nettles;
 
-import java.util.Observable;
-import java.util.Observer;
+public class NettleGame {
 
-public class NettleGame implements Observer {
-
-    private Map map;
+    private int[][] world;
     public static boolean gameOver = false;
     private boolean failed = false;
     private static boolean verbose;
     public static String tabs = "";
 
     NettleAgent agent;
+    private int numberOfNettles;
 
     public static void prettyPrint(String str) {
 
@@ -27,60 +25,68 @@ public class NettleGame implements Observer {
 
     private void endGame() {
 
-        tabs = "\t\t";
-        gameOver = true;
-        if (failed) {
-            printIfVerbose("GAME OVER");
-        } else {
-            printIfVerbose("YOU WON! CONGLATURATIONS!");
+        tabs = "\t\t\t";
+        agent.setDone(true);
 
-        }
         prettyPrint("Final number of random guesses: " + Integer.toString(agent.getRandomGuessCounter()));
         prettyPrint("Final number of probes: " + Integer.toString(agent.getProbeCounter()));
-        prettyPrint("Final number of flags: " + Integer.toString(agent.getFlagCounter()));
+        prettyPrint("Final number of flags: " + Integer.toString(agent.getNumberOfFlaggedCells()));
         prettyPrint("Succeeded: " + !failed);
 
     }
 
-    public void gameLoop() {
+    public void startGame() {
 
         agent.firstMove();
-        while (!gameOver) {
-            agent.makeMove();
-            if (verbose) {
-                map.printMap();
-            }
+        agent.makeMove();
+        if (!failed) {
+            endGame();
         }
     }
 
-    public NettleGame(NettleAgent agent, Map map, boolean verbose) {
+    public NettleGame(NettleAgent agent, int[][] world, int numberOfNettles, boolean verbose) {
         NettleGame.verbose = verbose;
+        this.world = world;
+        this.numberOfNettles = numberOfNettles;
         this.agent = agent;
-        this.map = map;
-        map.addObserver(this);
         tabs = "\t\t\t";
-        gameLoop();
 
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
+    public void checkWorld() {
 
-        MapCell cell = (MapCell) arg;
-        if (cell.getNumberOfAdjacentNettles() == -1 && !cell.isHidden()) {
+        int count = 0;
+        for (int i = 0; i < getWorldLength(); i++) {
+            for (int j = 0; j < getWorldWidth(); j++) {
+                if (world[i][j] == -1) {
+                    count++;
+                }
+            }
+        }
+        assert count == numberOfNettles : "INVALID NUMBER OF NETTLES \nnumber found: " + Integer.toString(count)
+                + "\nnumber provided: " + Integer.toString(numberOfNettles);
+
+    }
+
+    private int getWorldWidth() {
+
+        return world[0].length;
+    }
+
+    private int getWorldLength() {
+
+        return world.length;
+    }
+
+    public int probe(MapCell cell) {
+
+        int numbOfNettles = world[cell.getI()][cell.getJ()];
+        if (numbOfNettles == -1) {
             failed = true;
             endGame();
-        } else {
-            if (map.getNumberOfHiddenCells() == map.getNumberOfNettels()) {
-                endGame();
-            } else if (cell.getNumberOfAdjacentNettles() == 0) {
-                for (MapCell neighbour : map.getNeighbours(cell)) {
-                    map.revealCell(neighbour);
-                }
-
-            }
-
         }
+        return numbOfNettles;
+
     }
 
 }
