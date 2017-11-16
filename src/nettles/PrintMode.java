@@ -1,5 +1,5 @@
 package nettles;
 
-public enum PRINT_MODE {
+public enum PrintMode {
     REPORT, TABLE, VERBOSE
 }

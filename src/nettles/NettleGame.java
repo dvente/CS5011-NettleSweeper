@@ -26,7 +26,6 @@ public class NettleGame extends Observable {
     }
 
     public static void printIfVerbose(String str) {
-
         if (verbose) {
             prettyPrint(str);
         }
@@ -37,10 +36,10 @@ public class NettleGame extends Observable {
         tabs = "\t\t\t";
         agent.setDone(true);
 
-//        prettyPrint("Final number of random guesses: " + Integer.toString(agent.getRandomGuessCounter()));
-//        prettyPrint("Final number of probes: " + Integer.toString(agent.getProbeCounter()));
-//        prettyPrint("Final number of flags: " + Integer.toString(agent.getNumberOfFlaggedCells()));
-//        prettyPrint("Succeeded: " + !failed);
+        printIfVerbose("Final number of random guesses: " + Integer.toString(agent.getRandomGuessCounter()));
+        printIfVerbose("Final number of probes: " + Integer.toString(agent.getProbeCounter()));
+        printIfVerbose("Final number of flags: " + Integer.toString(agent.getNumberOfFlaggedCells()));
+        printIfVerbose("Succeeded: " + !failed);
         setChanged();
         notifyObservers(new Pair<String,Integer>("randomGuesses" , agent.getRandomGuessCounter()));
         setChanged();
