@@ -53,7 +53,7 @@ public class NettleGame {
         this.world = world;
         this.numberOfNettles = numberOfNettles;
         this.agent = agent;
-        tabs = "\t\t\t";
+        tabs = "\t\t";
 
     }
 

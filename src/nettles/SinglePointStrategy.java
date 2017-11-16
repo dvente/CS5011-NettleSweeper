@@ -12,7 +12,7 @@ public class SinglePointStrategy extends RandomGuessStrategy implements Strategy
     }
 
     protected List<MapCell> singlePointMove() {
-
+    	NettleGame.printIfVerbose("SPS");
         List<MapCell> answer = new ArrayList<MapCell>();
         for (MapCell cell : kb.getFronteir()) {
             if (allNeighboursAreSafe(cell)) {

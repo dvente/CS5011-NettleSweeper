@@ -1,8 +1,9 @@
 package nettles;
 
 public enum StrategyType {
-    RANDOM_GUESS(RandomGuessStrategy.class), SINGLE_POINT(SinglePointStrategy.class), EASY_EQUATION(
-            EasyEquationStrategy.class);
+//    RANDOM_GUESS(RandomGuessStrategy.class), 
+//    SINGLE_POINT(SinglePointStrategy.class), 
+    EASY_EQUATION(EasyEquationStrategy.class);
 
     private final Class<? extends Strategy> c;
 

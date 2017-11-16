@@ -60,12 +60,8 @@ public class EasyEquationStrategy extends SinglePointStrategy implements Strateg
         List<MapCell> answer = new ArrayList<MapCell>();
         Collection<MapCell> frontier = kb.getFronteir();
         for (Pair<MapCell, MapCell> pair : enumirateAdjacentPairs(frontier, frontier)) {
-
             MapCell A = pair.getKey();
             MapCell B = pair.getValue();
-            //            NettleGame.printIfVerbose("[A,B]: [" + A.toString() + "," + B.toString() + "]");
-            List<MapCell> copy = kb.getHiddenNeighbours(A);
-            copy.addAll(kb.getHiddenNeighbours(B));
 
             if (!(isASubsetB(kb.getHiddenNeighbours(A), kb.getHiddenNeighbours(B))
                     || isASubsetB(kb.getHiddenNeighbours(B), kb.getHiddenNeighbours(A)))) {
@@ -90,9 +86,11 @@ public class EasyEquationStrategy extends SinglePointStrategy implements Strateg
                 if (diff == 0) {
                     answer.add(C);
                     setShouldProbe(true);
+                    return answer;
                 } else {
                     answer.add(C);
                     setShouldProbe(false);
+                    return answer;
                 }
             }
         }

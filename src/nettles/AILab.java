@@ -14,7 +14,7 @@ public class AILab {
     public static String tabs = "";
     private int[][] world;
     private int numberOfNettles;
-    private boolean verbose = true;
+    private boolean verbose = false;
 
     public static void main(String[] args) {
 
@@ -50,9 +50,9 @@ public class AILab {
         tabs = "";
 
         try {
-                        runAllExperiments(testingDir);
+                        runAllExperiments(testingDir,false);
 //            runSingleExperiment(new File(testingDir + File.separator + "medium" + File.separator + "nworld5"),
-//                    StrategyType.EASY_EQUATION);
+//                    StrategyType.EASY_EQUATION, true);
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -75,7 +75,7 @@ public class AILab {
 
     }
 
-    public void runSingleExperiment(File dataDir, StrategyType type)
+    public void runSingleExperiment(File dataDir, StrategyType type, boolean verbose)
             throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
             NoSuchMethodException, SecurityException {
 
@@ -93,7 +93,7 @@ public class AILab {
 
     }
 
-    public void runAllExperiments(File dataDir) throws InstantiationException, IllegalAccessException,
+    public void runAllExperiments(File dataDir, boolean verbose) throws InstantiationException, IllegalAccessException,
             IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 
         // recursively walk the direcotry tree looking for experiments
@@ -106,7 +106,7 @@ public class AILab {
                 // experiments are located only in leaf directories
                 if (dataSubDir.isDirectory()) {
                     tabs += "\t";
-                    runAllExperiments(dataSubDir);
+                    runAllExperiments(dataSubDir, verbose);
                     tabs = tabs.substring(0, tabs.length() - 1);
                 }
             }
@@ -115,7 +115,7 @@ public class AILab {
 
         // we are in an experiment directory so wel'll run them
         for (StrategyType type : StrategyType.values()) {
-            runSingleExperiment(dataDir, type);
+            runSingleExperiment(dataDir, type, verbose);
         }
 
     }
