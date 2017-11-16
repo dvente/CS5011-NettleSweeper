@@ -4,13 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class RandomGuessStrategy extends AbstractStrategy implements Strategy {
+public class RandomGuessStrategy implements Strategy {
 
     Random rng;
     KnowledgeBase kb;
     NettleAgent agent;
     private int randomGuessCounter = 0;
     private boolean shouldProbe = true;
+    
+    public void reset() {
+    	randomGuessCounter = 0;
+    }
 
     public RandomGuessStrategy(KnowledgeBase kb) {
         super();

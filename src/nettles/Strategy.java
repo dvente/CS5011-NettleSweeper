@@ -13,5 +13,7 @@ public interface Strategy {
     public List<MapCell> randomMove();
 
     public boolean shouldProbe();
+    
+    public void reset();
 
 }

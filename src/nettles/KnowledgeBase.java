@@ -1,5 +1,6 @@
 package nettles;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Set;
 
-public class KnowledgeBase extends Observable {
+public class KnowledgeBase{
 
     private MapCell[][] map = null;
     private int mapLength = -1;
@@ -17,6 +18,13 @@ public class KnowledgeBase extends Observable {
     private Set<MapCell> revealedCells;
     private Set<MapCell> flaggedCells;
     private final int numberOfNettels;
+    
+    public void reset() {
+    	hiddenCells.addAll(revealedCells);
+    	hiddenCells.addAll(flaggedCells);
+    	revealedCells.clear();
+    	flaggedCells.clear();
+    }
 
     public KnowledgeBase(int mapLength, int mapWidth, int NumberOfNettles) {
         this.mapLength = mapLength;

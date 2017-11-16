@@ -26,13 +26,14 @@ public class AILab implements Observer {
 	private int[][] world;
 	private int numberOfNettles;
 	private boolean verbose = false;
+	private int currentNumberOfNettels;
 
 	// data should be stored in world -> algorithm -> variables
 	private Map<String, Map<String, Map<String, Integer>>> data;
 	private String currentExperimentDir;
 	private String currentType;
 
-	private final PrintMode printMode = PrintMode.TABLE;
+	private PrintMode printMode = PrintMode.TABLE;
 
 	public static void main(String[] args) {
 
@@ -69,13 +70,20 @@ public class AILab implements Observer {
 		data = new TreeMap<String, Map<String, Map<String, Integer>>>();
 		boolean verbose = false;
 		try {
-			if(printMode.equals(PrintMode.VERBOSE)) {
+			if (printMode.equals(PrintMode.VERBOSE)) {
 				verbose = true;
 			}
 			runAllExperiments(testingDir, verbose);
-			// runSingleExperiment(new File(testingDir + File.separator + "medium" +
-			// File.separator + "nworld5"),
-			// StrategyType.EASY_EQUATION, verbose);
+			printMode = PrintMode.TABLE;
+			
+			
+			
+			
+//			File testDir = new File(testingDir + File.separator + "medium" + File.separator + "nworld5");
+//			File testDir = new File(testingDir + File.separator + "generated" + File.separator + "L2N1");
+//			data.put(testDir.getPath(), new TreeMap<String, Map<String, Integer>>());
+//			 runSingleExperiment(testDir, StrategyType.EASY_EQUATION, true);
+//			 printMode = PrintMode.VERBOSE;
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -90,33 +98,39 @@ public class AILab implements Observer {
 			e.printStackTrace();
 		}
 		report(printMode);
-		// System.out.println(data.toString());
 	}
 
 	public void runSingleExperiment(File dataDir, StrategyType type, boolean verbose)
 			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException {
 		currentType = type.name();
+		currentExperimentDir = dataDir.getPath();
+//		data.put(currentExperimentDir,new TreeMap<String,Map<String,Integer>>());
 		data.get(currentExperimentDir).put(currentType, new TreeMap<String, Integer>());
 
-		// System.out.println(
-		// tabs + "Running experiment: " + currentExperimentDir + " with strategy: " +
-		// currentType);
-
 		readWorld(new File(dataDir + File.separator + "map.txt"));
-		KnowledgeBase kb = new KnowledgeBase(world.length, world[0].length, numberOfNettles);
+		KnowledgeBase kb = new KnowledgeBase(world.length, world[0].length, currentNumberOfNettels);
 		Strategy strat = type.getC().getConstructor(KnowledgeBase.class).newInstance(kb);
-		NettleAgent agent = new NettleAgent(kb, numberOfNettles);
-		NettleGame game = new NettleGame(agent, world, numberOfNettles, verbose);
+		NettleAgent agent = new NettleAgent(kb, currentNumberOfNettels);
+		NettleGame game = new NettleGame(agent, world, currentNumberOfNettels, verbose);
+		
 		agent.setGame(game);
 		agent.setStrat(strat);
 		game.addObserver(this);
 		game.startGame();
 
 	}
+	
+	public void setupSingleExperiment(File dataDir) {
+		
+	}
 
 	public void runAllExperiments(File dataDir, boolean verbose) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+
+		if (dataDir.listFiles().length == 0) {
+			return;
+		}
 
 		// recursively walk the direcotry tree looking for experiments
 		if (!isLeafDir(dataDir)) {
@@ -128,7 +142,6 @@ public class AILab implements Observer {
 				// experiments are located only in leaf directories
 				if (dataSubDir.isDirectory()) {
 					data.put(dataSubDir.getPath(), new TreeMap<String, Map<String, Integer>>());
-					currentExperimentDir = dataSubDir.getPath();
 					// tabs += "\t";
 					runAllExperiments(dataSubDir, verbose);
 					// tabs = tabs.substring(0, tabs.length() - 1);
@@ -149,7 +162,7 @@ public class AILab implements Observer {
 		try (BufferedReader in = new BufferedReader(new FileReader(file));) {
 			int mapLength = Integer.parseInt(in.readLine().trim());
 			int mapWidth = Integer.parseInt(in.readLine().trim());
-			int numberOfNettels = Integer.parseInt(in.readLine().trim());
+			currentNumberOfNettels = Integer.parseInt(in.readLine().trim());
 			world = new int[mapLength][mapWidth];
 			String line;
 			String[] splitLine;
@@ -174,16 +187,14 @@ public class AILab implements Observer {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		if(arg1 instanceof Pair) {
+		if (arg1 instanceof Pair) {
 			Pair<String, Integer> pair = (Pair<String, Integer>) arg1;
 			data.get(currentExperimentDir).get(currentType).put(pair.getKey(), pair.getValue());
-		}
-		else if( arg1 instanceof String) {
-			if(printMode.equals(PrintMode.VERBOSE)) {
+		} else if (arg1 instanceof String) {
+			if (printMode.equals(PrintMode.VERBOSE)) {
 				System.out.println(arg1);
 			}
 		}
-
 
 	}
 
@@ -206,9 +217,9 @@ public class AILab implements Observer {
 	private void printHeader(int minWidth) {
 		// print the header
 		for (String typeName : data.get(currentExperimentDir).keySet()) {
-			String typeNameFormated = String.format("%"+Integer.toString(minWidth+1)+"s",typeName);
-			System.out.print( typeNameFormated + ",");
-			
+			String typeNameFormated = String.format("%" + Integer.toString(minWidth + 1) + "s", typeName);
+			System.out.print(typeNameFormated + ",");
+
 		}
 		System.out.println();
 
@@ -216,11 +227,11 @@ public class AILab implements Observer {
 
 	private void printTable() {
 		int colWidth = 1;
-		for(StrategyType type : StrategyType.values()) {
+		for (StrategyType type : StrategyType.values()) {
 			colWidth = Math.max(colWidth, type.name().length());
 		}
 		int firstColWidth = 1;
-		for(String worldName : data.keySet()) {
+		for (String worldName : data.keySet()) {
 			firstColWidth = Math.max(firstColWidth, worldName.length());
 		}
 		for (String varName : data.get(currentExperimentDir).get(currentType).keySet()) {
@@ -231,10 +242,11 @@ public class AILab implements Observer {
 				if (data.get(worldName).keySet().isEmpty()) {
 					continue;
 				}
-				String worldNameFormated = String.format("%-"+Integer.toString(firstColWidth)+"s",worldName);
+				String worldNameFormated = String.format("%-" + Integer.toString(firstColWidth) + "s", worldName);
 				System.out.print(worldNameFormated);
 				for (String algoName : data.get(worldName).keySet()) {
-					System.out.print( String.format("%"+Integer.toString(colWidth)+"d",data.get(worldName).get(algoName).get(varName)) + ",");
+					System.out.print(String.format("%" + Integer.toString(colWidth) + "d",
+							data.get(worldName).get(algoName).get(varName)) + ",");
 				}
 				System.out.println();
 			}

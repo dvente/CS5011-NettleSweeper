@@ -1,14 +1,17 @@
 package nettles;
 
+import java.io.Serializable;
 import java.util.Observable;
 
 import javafx.util.Pair;
 
-public class NettleGame extends Observable {
+public class NettleGame extends Observable{
 
     private int[][] world;
     public static boolean gameOver = false;
-    private boolean failed = false;
+    public static boolean failed = false;
+    private int runsUntillSucess = 0;
+    private final int maxRuns = 1000;
     private static boolean verbose;
     public static String tabs = "";
 
@@ -39,16 +42,19 @@ public class NettleGame extends Observable {
         printIfVerbose("Final number of random guesses: " + Integer.toString(agent.getRandomGuessCounter()));
         printIfVerbose("Final number of probes: " + Integer.toString(agent.getProbeCounter()));
         printIfVerbose("Final number of flags: " + Integer.toString(agent.getNumberOfFlaggedCells()));
-        printIfVerbose("Succeeded: " + !failed);
+        printIfVerbose("Number of runs untill success: " + Integer.toString(runsUntillSucess));
+//        printIfVerbose("Succeeded: " + !failed);
         setChanged();
         notifyObservers(new Pair<String,Integer>("randomGuesses" , agent.getRandomGuessCounter()));
         setChanged();
         notifyObservers(new Pair<String,Integer>("probes" , agent.getProbeCounter()));
         setChanged();
         notifyObservers(new Pair<String,Integer>("flags" , agent.getNumberOfFlaggedCells()));
-        int bool = !failed ? 1 : 0; // true->1, false->0
         setChanged();
-        notifyObservers(new Pair<String,Integer>("succeeded" , bool));
+        notifyObservers(new Pair<String,Integer>("runsUntilSuccess" , runsUntillSucess));
+//        int bool = !failed ? 1 : 0; // true->1, false->0
+//        setChanged();
+//        notifyObservers(new Pair<String,Integer>("succeeded" , bool));
 
         
         
@@ -56,9 +62,13 @@ public class NettleGame extends Observable {
     }
 
     public void startGame() {
-
-        agent.firstMove();
-        agent.makeMove();
+    	do {
+    		printIfVerbose("Starting new game");
+    		agent.reset();
+			agent.firstMove();
+			agent.makeMove();
+			runsUntillSucess++;
+    	} while(failed && runsUntillSucess < maxRuns);
         report();
         
     }
