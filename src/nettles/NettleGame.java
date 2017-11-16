@@ -1,6 +1,10 @@
 package nettles;
 
-public class NettleGame {
+import java.util.Observable;
+
+import javafx.util.Pair;
+
+public class NettleGame extends Observable {
 
     private int[][] world;
     public static boolean gameOver = false;
@@ -33,10 +37,22 @@ public class NettleGame {
         tabs = "\t\t\t";
         agent.setDone(true);
 
-        prettyPrint("Final number of random guesses: " + Integer.toString(agent.getRandomGuessCounter()));
-        prettyPrint("Final number of probes: " + Integer.toString(agent.getProbeCounter()));
-        prettyPrint("Final number of flags: " + Integer.toString(agent.getNumberOfFlaggedCells()));
-        prettyPrint("Succeeded: " + !failed);
+//        prettyPrint("Final number of random guesses: " + Integer.toString(agent.getRandomGuessCounter()));
+//        prettyPrint("Final number of probes: " + Integer.toString(agent.getProbeCounter()));
+//        prettyPrint("Final number of flags: " + Integer.toString(agent.getNumberOfFlaggedCells()));
+//        prettyPrint("Succeeded: " + !failed);
+        setChanged();
+        notifyObservers(new Pair<String,Integer>("randomGuesses" , agent.getRandomGuessCounter()));
+        setChanged();
+        notifyObservers(new Pair<String,Integer>("probes" , agent.getProbeCounter()));
+        setChanged();
+        notifyObservers(new Pair<String,Integer>("flags" , agent.getNumberOfFlaggedCells()));
+        int bool = !failed ? 1 : 0; // true->1, false->0
+        setChanged();
+        notifyObservers(new Pair<String,Integer>("succeeded" , bool));
+
+        
+        
 
     }
 

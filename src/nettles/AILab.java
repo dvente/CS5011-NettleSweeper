@@ -6,8 +6,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
-public class AILab {
+import javafx.util.Pair;
+
+public class AILab implements Observer {
 
     private final File testingDir;
 
@@ -15,6 +24,7 @@ public class AILab {
     private int[][] world;
     private int numberOfNettles;
     private boolean verbose = false;
+    private List<Map<String,Integer>> recordList = new ArrayList<Map<String,Integer>>();
 
     public static void main(String[] args) {
 
@@ -54,31 +64,25 @@ public class AILab {
 //            runSingleExperiment(new File(testingDir + File.separator + "medium" + File.separator + "nworld5"),
 //                    StrategyType.EASY_EQUATION, true);
         } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (InvocationTargetException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (SecurityException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
+        System.out.println(recordList.toString());
     }
 
     public void runSingleExperiment(File dataDir, StrategyType type, boolean verbose)
             throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
             NoSuchMethodException, SecurityException {
-
+    	recordList.add(new HashMap<String, Integer>());
         System.out.println(
                 tabs + "Running experiment: " + dataDir.getName() + " with strategy: " + type.getC().getName());
 
@@ -89,6 +93,7 @@ public class AILab {
         NettleGame game = new NettleGame(agent, world, numberOfNettles, verbose);
         agent.setGame(game);
         agent.setStrat(strat);
+        game.addObserver(this);
         game.startGame();
 
     }
@@ -147,5 +152,12 @@ public class AILab {
         }
         return null;
     }
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		Pair<String,Integer> pair = (Pair<String,Integer>)arg1; 
+		recordList.get(recordList.size() - 1).put(pair.getKey(), pair.getValue());
+		
+	}
 
 }
