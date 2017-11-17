@@ -14,23 +14,30 @@ import java.util.TreeMap;
 
 import javafx.util.Pair;
 
+/**
+ * A class to easily and automaticall run all tests in a specified path for all
+ * implementations of specified in the StrategyType enum. Design adapted from an
+ * oral interaction wtih Dr Ozgur Akgun (ozgur.akgun@st-andrews.ac.uk)
+ *
+ * @author 170008773
+ */
 public class AILab implements Observer {
-
-    private final File testingDir;
-
-    public static String tabs = "";
-    private int[][] world;
-    private int numberOfNettles;
-    private boolean verbose = false;
-    private int currentNumberOfNettels;
 
     // data should be stored in world -> algorithm -> variables
     private Map<String, Map<String, Map<String, Integer>>> data;
+    private int currentNumberOfNettels;
     private String currentExperimentDir;
     private String currentType;
-
+    public static String tabs = "";
+    private int[][] world;
     private PrintMode printMode = PrintMode.REPORT;
 
+    /**
+     * main function. does some basic input checking
+     *
+     * @param args
+     *            command line argumetns
+     */
     public static void main(String[] args) {
 
         File file = new File(args[0]);
@@ -60,8 +67,11 @@ public class AILab implements Observer {
         return true;
     }
 
+    /**
+     * @param testingDir
+     *            directory where the experiments are located
+     */
     public AILab(File testingDir) {
-        this.testingDir = testingDir;
         tabs = "";
         data = new TreeMap<String, Map<String, Map<String, Integer>>>();
         boolean verbose = false;
@@ -69,11 +79,13 @@ public class AILab implements Observer {
             if (printMode.equals(PrintMode.VERBOSE)) {
                 verbose = true;
             }
+            //run all experiment
             runAllExperiments(testingDir, verbose);
             printMode = PrintMode.REPORT;
 
+            // example of how to setup a single experiment
+
             //			File testDir = new File(testingDir + File.separator + "medium" + File.separator + "nworld5");
-            //			File testDir = new File(testingDir + File.separator + "generated" + File.separator + "L2N1");
             //			data.put(testDir.getPath(), new TreeMap<String, Map<String, Integer>>());
             //			 runSingleExperiment(testDir, StrategyType.EASY_EQUATION, true);
             //			 printMode = PrintMode.VERBOSE;
@@ -93,13 +105,28 @@ public class AILab implements Observer {
         report(printMode);
     }
 
+    /**
+     * Runs a experiment in the specified way
+     *
+     * @param dataDir
+     *            the directory where the experiments is located
+     * @param type
+     *            the method to run the experiment with
+     * @param verbose
+     *            should the experiment print what it is doing?
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException
+     * @throws NoSuchMethodException
+     * @throws SecurityException
+     */
     public void runSingleExperiment(File dataDir, StrategyType type, boolean verbose)
             throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
             NoSuchMethodException, SecurityException {
 
         currentType = type.name();
         currentExperimentDir = dataDir.getPath();
-        //		data.put(currentExperimentDir,new TreeMap<String,Map<String,Integer>>());
         data.get(currentExperimentDir).put(currentType, new TreeMap<String, Integer>());
 
         readWorld(new File(dataDir + File.separator + "map.txt"));
@@ -115,13 +142,25 @@ public class AILab implements Observer {
 
     }
 
-    public void setupSingleExperiment(File dataDir) {
-
-    }
-
+    /**
+     * Recursively walks through the specified directory and runs all
+     * experiments that it finds
+     *
+     * @param dataDir
+     *            the directory where the experiments are located
+     * @param verbose
+     *            should the experiment print what it is doing?
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException
+     * @throws NoSuchMethodException
+     * @throws SecurityException
+     */
     public void runAllExperiments(File dataDir, boolean verbose) throws InstantiationException, IllegalAccessException,
             IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 
+        // ignore directories that don't contain files
         if (dataDir.listFiles().length == 0) {
             return;
         }
@@ -129,22 +168,18 @@ public class AILab implements Observer {
         // recursively walk the direcotry tree looking for experiments
         if (!isLeafDir(dataDir)) {
 
-            // System.out.println(tabs + dataDir.getName());
             for (File dataSubDir : dataDir.listFiles()) {
-                // don't try to run an experiment on a file somewhere up the
-                // testing tree
+                // don't try to run an experiment on a file somewhere up the testing tree
                 // experiments are located only in leaf directories
                 if (dataSubDir.isDirectory()) {
                     data.put(dataSubDir.getPath(), new TreeMap<String, Map<String, Integer>>());
-                    // tabs += "\t";
                     runAllExperiments(dataSubDir, verbose);
-                    // tabs = tabs.substring(0, tabs.length() - 1);
                 }
             }
             return;
         }
 
-        // we are in an experiment directory so wel'll run them
+        // we are in an experiment directory so wel'll run the experiments
         for (StrategyType type : StrategyType.values()) {
             runSingleExperiment(dataDir, type, verbose);
         }
@@ -153,7 +188,7 @@ public class AILab implements Observer {
 
     /**
      * Reads the world from the given file. Taken and adapted from A2
-     * 
+     *
      * @param file
      *            the file containing the world
      * @return an array containing the world in the provided file
@@ -200,6 +235,11 @@ public class AILab implements Observer {
 
     }
 
+    /**
+     * prints revieved data in specified format.
+     *
+     * @param printMode
+     */
     public void report(PrintMode printMode) {
 
         switch (printMode) {
@@ -217,6 +257,12 @@ public class AILab implements Observer {
         }
     }
 
+    /**
+     * prints the header of the table to specified width
+     *
+     * @param minWidth
+     *            minimum width of the columns
+     */
     private void printHeader(int minWidth) {
 
         // print the header
@@ -229,26 +275,41 @@ public class AILab implements Observer {
 
     }
 
+    /**
+     * prints all received data in table format
+     */
     private void printTable() {
 
+        //figure out the minimum column width (determined by length of the names)
         int colWidth = 1;
         for (StrategyType type : StrategyType.values()) {
             colWidth = Math.max(colWidth, type.name().length());
         }
+
+        //first column might have a different width to the data columns so figure that out
         int firstColWidth = 1;
         for (String worldName : data.keySet()) {
             firstColWidth = Math.max(firstColWidth, worldName.length());
         }
+
+        // loop through the nested maps in the correct order
         for (String varName : data.get(currentExperimentDir).get(currentType).keySet()) {
             System.out.println(varName);
             System.out.print(String.join("", Collections.nCopies(firstColWidth + 1, " ")));
             printHeader(colWidth);
+
             for (String worldName : data.keySet()) {
+
+                //don't print anything for directories that have no data
                 if (data.get(worldName).keySet().isEmpty()) {
                     continue;
                 }
+
+                //print name of the experiment
                 String worldNameFormated = String.format("%-" + Integer.toString(firstColWidth) + "s", worldName);
                 System.out.print(worldNameFormated);
+
+                //print all the data
                 for (String algoName : data.get(worldName).keySet()) {
                     System.out.print(String.format("%" + Integer.toString(colWidth) + "d",
                             data.get(worldName).get(algoName).get(varName)) + ",");
@@ -259,7 +320,10 @@ public class AILab implements Observer {
         }
     }
 
-    // data should be stored in world -> algorithm -> variables
+    /***
+     * prints all recieved data in report style
+     */
+    //data should be stored in world -> algorithm -> variables
     private void printReport() {
 
         tabs = "\t";
