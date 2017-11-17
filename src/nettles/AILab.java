@@ -30,7 +30,7 @@ public class AILab implements Observer {
     private String currentType;
     public static String tabs = "";
     private int[][] world;
-    private PrintMode printMode = PrintMode.REPORT;
+    private PrintMode printMode = PrintMode.TABLE;
 
     /**
      * main function. does some basic input checking
@@ -81,7 +81,6 @@ public class AILab implements Observer {
             }
             //run all experiment
             runAllExperiments(testingDir, verbose);
-            printMode = PrintMode.REPORT;
 
             // example of how to setup a single experiment
 
