@@ -45,15 +45,19 @@
  
 \subsection{Testing}
 \label{subsec:testing}
+\paragraph{Initial testing}
 
-
+\paragraph{Framework}
 \subsection{Examples}
 \label{example}
 
  
 \section{Running}
 \label{running}
-
+\begin{enumerate}
+\item  Several \code{.jar} files are included with the submition. All of the \code{LogicN.jar} files should be run in the same maner: \code{java -jar LogicN.jar <testDirectory>} The program expects there to me a file in this directory called \code{map.txt}. The format of this file is as follows. The first three lines of the file should contain just one integer. The first two should be the length and width of the world respectively. The third should be the number of nettles present in the world. Then the array of the world should follow in CSV format (i.e. rows of integers seperated by commas and rows should be seperated by newlines). Examples of the file and directory structure that the programmes expect are included.
+\item There is another \code{.jar} file included with the submition called \code{ProduceExperimentReport.jar}. This file expects as argument the root directory of the experiments. It will then recursively go through this directory tree looking for files \code{map.txt}  and running the experiments it finds with all provided implementations and record the data those experiments report. When all the experiments are done it will output the result in a table format (one for every variable)   
+\end{enumerate}
  
 \section{Evaluation}
 \label{evals}
