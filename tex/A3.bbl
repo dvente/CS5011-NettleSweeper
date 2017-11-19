@@ -1,8 +1,8 @@
 \begin{thebibliography}{}
 
-\bibitem[\protect\astroncite{Russell and Norvig}{2014}]{Russell2014}
-Russell, S.~J. and Norvig, P. (2014).
-\newblock {\em {Artificial intelligence : a modern approach.}}
-\newblock Pearson custom library. Harlow : Pearson, 2014.
+\bibitem[\protect\astroncite{Kaye}{2000}]{Kaye00}
+Kaye, R. (2000).
+\newblock {Minesweeper is NP-complete.}
+\newblock {\em Mathematical Intelligencer}, 22(2):9.
 
 \end{thebibliography}
