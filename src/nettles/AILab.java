@@ -16,7 +16,7 @@ import javafx.util.Pair;
 
 /**
  * A class to easily and automaticall run all tests in a specified path for all
- * implementations of specified in the StrategyType enum. Design adapted from an
+ * implementations specified in the StrategyType enum. Design adapted from an
  * oral interaction wtih Dr Ozgur Akgun (ozgur.akgun@st-andrews.ac.uk)
  *
  * @author 170008773
@@ -264,7 +264,6 @@ public class AILab implements Observer {
      */
     private void printHeader(int minWidth) {
 
-        // print the header
         for (String typeName : data.get(currentExperimentDir).keySet()) {
             String typeNameFormated = String.format("%" + Integer.toString(minWidth + 1) + "s", typeName);
             System.out.print(typeNameFormated + ",");

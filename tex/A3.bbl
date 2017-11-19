@@ -1,5 +1,11 @@
 \begin{thebibliography}{}
 
+\bibitem[\protect\astroncite{Cook}{1971}]{Cook71}
+Cook, S.~A. (1971).
+\newblock {The complexity of theorem-proving procedures}.
+\newblock {\em Proceedings of the 3rd {\{}IEEE{\}} Symposium on the Theory of
+  Computation}, pages 151--158.
+
 \bibitem[\protect\astroncite{Kaye}{2000}]{Kaye00}
 Kaye, R. (2000).
 \newblock {Minesweeper is NP-complete.}
