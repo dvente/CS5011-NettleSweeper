@@ -40,11 +40,11 @@
 
 \paragraph{The history}
 
-\paragraph{The rules} Minesweeper consists of a rectangular board of cells. At the start of the game, all the cells are covered, and some cells will contain mines. The Player/agent can perform two actions in this game: Flagging or uncovering a cell. If a cell containing a mine is uncovered the agent has lost the game. If a cell that does not contain a mine is uncovered it will reveal a number. This number is equal to the number of cells that are adjacent to the uncovered cell and contain a mine. If a cell is uncovered that is not adjacent to any mines, all of its neighbours will be uncovered. The agent has won when all of the cells that do not contain a mine are uncovered. 
+\paragraph{The rules} minesweeper consists of a rectangular board of cells. At the start of the game, all the cells are covered, and some cells will contain nettles. The Player/agent can perform two actions in this game: Flagging or uncovering a cell. If a cell containing a mine is uncovered the agent has lost the game. If a cell that does not contain a mine is uncovered it will reveal a number. This number is equal to the number of cells that are adjacent to the uncovered cell and contain a mine. If a cell is uncovered that is not adjacent to any nettles, all of its neighbours will be uncovered. The agent has won when all of the cells that do not contain a mine are uncovered. 
 
 \paragraph{P vs. NP} Much has been written about the complexity of minesweeper. Complexity is a measure of how ``hard" a problem is. \cite{Kaye00} tells us that complexity-theory is a way of extimating the amount of time needed to solve a problem given the \textit{length} of the input. The first class of problems is a class called P, for \textit{polynomial-time computable} problems. These are the porblems that when given an input of length $n$, that can be solved in $n^k$ steps for some exponent $k$. \citeauthor{Kaye00} writes that these probelms are precicely the ones that are practically solvable. Conversely NP or \textit{Nondeterministic Polynomail-time computable} is a class of problems that is solvable in polynomial time using ``non-deterministic" algortihms (i.e. algorithms where the computer is allowed to make some guesses).  
 
-\paragraph{The complexity of minesweeper} \cite{Kaye00} proved that minesweeper is NP-Complete. This 
+\paragraph{The complexity of minesweeper} \cite{Kaye00} proved that mineweeper is NP-Complete. This 
  
 \section{Design}
 \label{design}
@@ -58,11 +58,11 @@
 \paragraph{Initial testing} During the early stages of developemtn we mainly used two forms of testing. Manual inspection of states and outputs and \code{assert} statements. The \code{assert} served as micro unit tests, making sure that the things that worked still worked. Furthermore we visually inspected most of the output and states of the agent and the strategy to verify that the programms worked correctly. 
 
 \paragraph{Framework} After most of the strategies and game logic had been implemented, we implemented a way to automatically run tests with different implemetnations, and print the results in a readable format. This then allowed us to compare results across both the algorithms and maps which allowed us to correct several bugs in the logic of the game, agent and strategies. 
+
 \subsection{Examples}
 \label{example}
 \paragraph{A single run} A single run of the programm using the easy equation strattegy looks as follows:
-\begin{lstlisting}
-java -jar Logic2.jar ../worlds/easy/nworld1
+\begin{lstlisting}java -jar Logic2.jar ../worlds/easy/nworld1/
 		Starting new game
 		Probing: (0,0)
 		  0  ?  ?  ?  ?
@@ -71,77 +71,147 @@ java -jar Logic2.jar ../worlds/easy/nworld1
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 
-		Probing: (1,0)
+		Revealing: (1,0)
 		  0  0  ?  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 
-		Probing: (2,0)
+		Revealing: (2,0)
 		  0  0  0  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 
-		Probing: (3,0)
+		Revealing: (3,0)
 		  0  0  0  2  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 
-		Probing: (1,1)
+		Revealing: (1,1)
 		  0  0  0  2  ?
 		  ?  0  ?  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 
-		Probing: (0,1)
+		Revealing: (0,1)
 		  0  0  0  2  ?
 		  0  0  ?  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 
-		Probing: (0,2)
+		Revealing: (0,2)
 		  0  0  0  2  ?
 		  0  0  ?  ?  ?
 		  1  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 
-		Probing: (1,2)
+		Revealing: (1,2)
 		  0  0  0  2  ?
 		  0  0  ?  ?  ?
 		  1  2  ?  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 
-		Probing: (2,1)
+		Revealing: (2,1)
 		  0  0  0  2  ?
 		  0  0  0  ?  ?
 		  1  2  ?  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 
-		Probing: (3,1)
+		Revealing: (3,1)
 		  0  0  0  2  ?
 		  0  0  0  2  ?
 		  1  2  ?  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 
-		Probing: (2,2)
+		Revealing: (2,2)
 		  0  0  0  2  ?
 		  0  0  0  2  ?
 		  1  2  1  ?  ?
 		  ?  ?  ?  ?  ?
 		  ?  ?  ?  ?  ?
 
-		Probing: (3,2)
+		Revealing: (3,2)
+		  0  0  0  2  ?
+		  0  0  0  2  ?
+		  1  2  1  2  ?
+		  ?  ?  ?  ?  ?
+		  ?  ?  ?  ?  ?
+
+		Revealing: (0,2)
+		  0  0  0  2  ?
+		  0  0  0  2  ?
+		  1  2  1  2  ?
+		  ?  ?  ?  ?  ?
+		  ?  ?  ?  ?  ?
+
+		Revealing: (1,2)
+		  0  0  0  2  ?
+		  0  0  0  2  ?
+		  1  2  1  2  ?
+		  ?  ?  ?  ?  ?
+		  ?  ?  ?  ?  ?
+
+		Revealing: (2,2)
+		  0  0  0  2  ?
+		  0  0  0  2  ?
+		  1  2  1  2  ?
+		  ?  ?  ?  ?  ?
+		  ?  ?  ?  ?  ?
+
+		Revealing: (2,1)
+		  0  0  0  2  ?
+		  0  0  0  2  ?
+		  1  2  1  2  ?
+		  ?  ?  ?  ?  ?
+		  ?  ?  ?  ?  ?
+
+		Revealing: (3,1)
+		  0  0  0  2  ?
+		  0  0  0  2  ?
+		  1  2  1  2  ?
+		  ?  ?  ?  ?  ?
+		  ?  ?  ?  ?  ?
+
+		Revealing: (0,1)
+		  0  0  0  2  ?
+		  0  0  0  2  ?
+		  1  2  1  2  ?
+		  ?  ?  ?  ?  ?
+		  ?  ?  ?  ?  ?
+
+		Revealing: (1,1)
+		  0  0  0  2  ?
+		  0  0  0  2  ?
+		  1  2  1  2  ?
+		  ?  ?  ?  ?  ?
+		  ?  ?  ?  ?  ?
+
+		Revealing: (2,1)
+		  0  0  0  2  ?
+		  0  0  0  2  ?
+		  1  2  1  2  ?
+		  ?  ?  ?  ?  ?
+		  ?  ?  ?  ?  ?
+
+		Revealing: (0,1)
+		  0  0  0  2  ?
+		  0  0  0  2  ?
+		  1  2  1  2  ?
+		  ?  ?  ?  ?  ?
+		  ?  ?  ?  ?  ?
+
+		Revealing: (1,1)
 		  0  0  0  2  ?
 		  0  0  0  2  ?
 		  1  2  1  2  ?
@@ -199,14 +269,14 @@ java -jar Logic2.jar ../worlds/easy/nworld1
 		  ?  ?  ?  2  0
 		  ?  ?  ?  ?  ?
 
-		Probing: (3,4)
+		Revealing: (3,4)
 		  0  0  0  2  F
 		  0  0  0  2  F
 		  1  2  1  2  1
 		  ?  ?  ?  2  0
 		  ?  ?  ?  2  ?
 
-		Probing: (4,4)
+		Revealing: (4,4)
 		  0  0  0  2  F
 		  0  0  0  2  F
 		  1  2  1  2  1
@@ -264,15 +334,16 @@ java -jar Logic2.jar ../worlds/easy/nworld1
 		  1  3  F  2  0
 
 			Final number of random guesses: 0
-			Final number of probes: 20
+			Final number of probes: 7
 			Final number of flags: 5
 			Number of runs untill success: 1
 
+
 \end{lstlisting}
- Whereas a run form the ProduceExperimentReport.jar looks like this:
+ Whereas a run form the \code{ProduceExperimentReport.jar} looks like this:
  \begin{lstlisting}
  flags
-                          EASY_EQUATION,  RANDOM_GUESS,  SINGLE_POINT,
+                          EASY\\_EQUATION,  RANDOM\\_GUESS,  SINGLE\\_POINT,
 ../worlds/easy/nworld1              5,            5,            5,
 ../worlds/easy/nworld2              9,            5,            8,
 ../worlds/easy/nworld3              8,            5,            7,
@@ -290,7 +361,7 @@ java -jar Logic2.jar ../worlds/easy/nworld1
 ../worlds/medium/nworld5           16,            0,           16,
 
 probes
-                          EASY_EQUATION,  RANDOM_GUESS,  SINGLE_POINT,
+                          EASY\\_EQUATION,  RANDOM\\_GUESS,  SINGLE\\_POINT,
 ../worlds/easy/nworld1             20,           20,           20,
 ../worlds/easy/nworld2             16,           20,           17,
 ../worlds/easy/nworld3             17,           20,           18,
@@ -308,7 +379,7 @@ probes
 ../worlds/medium/nworld5           65,           65,           65,
 
 randomGuesses
-                          EASY_EQUATION,  RANDOM_GUESS,  SINGLE_POINT,
+                          EASY\\_EQUATION,  RANDOM\\_GUESS,  SINGLE\\_POINT,
 ../worlds/easy/nworld1              0,            4,            0,
 ../worlds/easy/nworld2              0,            6,            6,
 ../worlds/easy/nworld3              0,            7,            1,
@@ -326,7 +397,7 @@ randomGuesses
 ../worlds/medium/nworld5            0,            9,            1,
 
 runsUntilSuccess
-                          EASY_EQUATION,  RANDOM_GUESS,  SINGLE_POINT,
+                          EASY\\_EQUATION,  RANDOM\\_GUESS,  SINGLE\\_POINT,
 ../worlds/easy/nworld1              1,           72,            1,
 ../worlds/easy/nworld2              1,          345,            3,
 ../worlds/easy/nworld3              1,          523,            5,
@@ -363,11 +434,145 @@ runsUntilSuccess
  
 \section{Evaluation}
 \label{evals}
+\paragraph{Variables used} In evaluating our systems we monitored four valiables across our runs: The number of cells flagged, the number of probed cells, the number of random guesses the agent made and the number of runs it took for a strategy to be successfull, which are detailed in table \ref{table:flagged}. \ref{table:probed}, \ref{table:randomGuesses} and \ref{table:runsUntillSuccessful} respectively. 
+
+\paragraph{Variable justifications}We chose to record the number of runs it took to complete a map by some strategy in stead of whether the strategy succeeded or not to account a bit better for the randomness. We did this because the more cells are already uncovered by the agent, the higher the probablity of randomly guessing a mine. To reflect this we thought it was better record how many times it would take to complete a map to give the strategies that would have to make random guesses a better chance. This has the added advantage that it carries over well to generated maps which are not garanteed to be solvable by inference alone. To avoid almost-infinite loops on the harder maps we capped the number of runs the agent was allowed to make at 1000. 
+
+\paragraph{}Further more it is important to note that the number of probed cells does not include cells reveald because they are the neighbour of a cell of value 0. If these were included and the algorithm succeeds, the number of probes will always be equal to the size of the map minus the number of nettles. We decided that this would be a less usefull metric since it would not show any possible optimisations an agent could have made by clever deduction. Furthermore this also reflects between the cells the agent actively tries to reveal and the cells which are revealed by the world. 
+
+\paragraph{} We recongnise that al though giving the agents a number of runs to complete the world is an improvement over the single run, it is still not optimal. One could, for example, have set up everything such that we'd compare an average performance across a fixed number of runs. This would probably have given an even better interpreation. We, however, did not have time to implement this. We also hypothesiese that it would have made no difference in the conclusions we draw in this report since the strategies and maps are not complex enough to warent these sohpisticated analises. 
+
+\subsection{Interpretation of results}
+\label{interpretation}
+
+\paragraph{Relative performance of the strategies} Looking at the data we see a clear highrarchy. The easy equation strategy performs better than the single point strategy which in term is better than the random guessing. This was be expected since very algorithm is an extention of the previous.  
+
+\paragraph{Flagged} When looking at the flagged numbers we see that the ranodm guess strategy flagged 5 cells in the easy maps and none in the others. That is because the random guess strattegy flaggs all cells if and only if all the remaining cells are nettles (which it knows because  this number is provided). So it will only flag cells if it suceeds by randomly guessing. Here we see that it only did so on the easy maps, which was to be expected. It could have also succeeded at the harder maps if we increased the run cap, but we did not find this a relevat experiment.
+
+\paragraph{Probed} In the way we set up the experiment the number of cells probed is not a very usefull metric, but we included it for good measure anyway. This is because our algorithms are not complicated enough to make clever deductions which could potentially save on the number of probes that would be necessary. This could, however, become a usefull metric if one were to develop more sophisticated algorithms. At the moment the number of cells probed is more of a reflextion of how the map it layed out (are the nettled clustered or not/ does it contain a lot of 0s?) than how our algorithm performs. Note however that if the algorithm fails, then the probe counter reflects how far the algorithm came on it's last run. 
+
+\paragraph{Random guesses} The amount of random guessing that the agent has to perform is the variable we orriginally set out to optimise. However, because the maps were garenteed to be solvable by inference alone, it is hard to make a good comparison between them. We again see the hirarchy we mentioned earlier emerge here, but beyond that there is not much we can conclude from this data. 
+
+\paragraph{Number of runs} Again, because the experiments and the strategies lack a lot of complexity, there is not an incredible amount we can deduce form the data here. We see that the easy equation strategy completes all of the maps in a single run, as was guarenteed. Although this does provide a nice reasurance that the strategy was correctly implemented. We do see something interesting when we look at the data for the single point strattegy. Here, we see that it also completes almost all maps sucessfully in one run. If we look back at the number of random guesses made, we see that some, although not all of the runs that were completed in one go were solved completely without making a random guess. The maps where the agent did have to randomly guess have relatively little runs and guesses, which leads us to beleive that the agent had to make a few guesses early on, when still plenty of safe cells were uncovered, and was able to solve the rest of the map from there. This suggests that a strategy which attempts to minimse guesses down the line by making guesses early, could yield significant results. 
+
+\begin{table}[ht]
+  \centering
+\begin{tabular}{|l|r|r|r|}
+\hline
+\multicolumn{4}{|c|}{\textbf{Flagged Cells}} \\
+\hline
+\hline
+ & EASY\_EQUATION & RANDOM\_GUESS & SINGLE\_POINT\\\hline
+worlds/easy/nworld1 & 5 & 5 & 5\\
+worlds/easy/nworld2 & 9 & 5 & 9\\
+worlds/easy/nworld3 & 8 & 5 & 7\\
+worlds/easy/nworld4 & 7 & 5 & 7\\
+worlds/easy/nworld5 & 8 & 5 & 8\\
+worlds/hard/nworld1 &  20 & 0 & 20\\
+worlds/hard/nworld2 &  34 & 0 & 20\\
+worlds/hard/nworld3 &  33 & 0 & 20\\
+worlds/hard/nworld4 &  34 & 0 & 34\\
+worlds/hard/nworld5 &  34 & 0 & 34\\
+worlds/medium/nworld1 & 16 & 0 & 16\\
+worlds/medium/nworld2 & 10 & 0 & 10\\
+worlds/medium/nworld3 & 16 & 0 & 10\\
+worlds/medium/nworld4 & 10 & 0 & 10\\
+worlds/medium/nworld5 & 16 & 0 & 16\\
+    \hline
+    \end{tabular}
+  \caption{Table containing the number of flagged cells by each algorithm per map. }
+  \label{table:flagged}
+\end{table}
+
+\begin{table}[ht!]
+  \centering
+\begin{tabular}{|l|r|r|r|}
+\hline
+\multicolumn{4}{|c|}{\textbf{Probed Cells}} \\
+\hline
+\hline
+ & EASY\_EQUATION & RANDOM\_GUESS & SINGLE\_POINT\\\hline
+worlds/easy/nworld1 & 7 & 6 & 7\\
+worlds/easy/nworld2 & 7 & 7 & 7\\
+worlds/easy/nworld3 & 6 & 6 & 7\\
+worlds/easy/nworld4 & 3 & 5 & 3\\
+worlds/easy/nworld5 & 3 & 5 & 2\\
+worlds/hard/nworld1 &  26 & 3 & 28\\
+worlds/hard/nworld2 &  18 & 7 & 26\\
+worlds/hard/nworld3 &  22 & 2 & 32\\
+worlds/hard/nworld4 &  26 & 2 & 26\\
+worlds/hard/nworld5 &  29 & 4 & 29\\
+worlds/medium/nworld1 & 12 & 2 & 12\\
+worlds/medium/nworld2 & 11 & 7 & 11\\
+worlds/medium/nworld3 & 23 & 2 & 24\\
+worlds/medium/nworld4 & 18 & 2 & 18\\
+worlds/medium/nworld5 & 12 & 3 & 11\\
+    \hline
+    \end{tabular}
+  \caption{Table containing the number of probed cells by each algorithm per map. Here it is important to note that this does nost include cells reveald because they are the neighbour of a cell of value 0}
+  \label{table:probed}
+\end{table}
+\begin{table}[ht!]
+  \centering
+\begin{tabular}{|l|r|r|r|}\\
+\hline
+\multicolumn{4}{|c|}{\textbf{Random Guesses}} \\
+\hline
+\hline
+ & EASY\_EQUATION & RANDOM\_GUESS & SINGLE\_POINT\\\hline
+worlds/easy/nworld1 & 0 & 5 & 0\\
+worlds/easy/nworld2 & 0 & 6 & 1\\
+worlds/easy/nworld3 & 0 & 5 & 1\\
+worlds/easy/nworld4 & 0 & 4 & 0\\
+worlds/easy/nworld5 & 0 & 4 & 1\\
+worlds/hard/nworld1 & 0 & 2 & 5\\
+worlds/hard/nworld2 & 0 & 6 & 3\\
+worlds/hard/nworld3 & 0 & 1 & 1\\
+worlds/hard/nworld4 & 0 & 1 & 0\\
+worlds/hard/nworld5 & 0 & 3 & 0\\
+worlds/medium/nworld1 & 0 & 1 & 0\\
+worlds/medium/nworld2 & 0 & 6 & 0\\
+worlds/medium/nworld3 & 0 & 1 & 9\\
+worlds/medium/nworld4 & 0 & 1 & 0\\
+worlds/medium/nworld5 & 0 & 2 & 1\\
+    \hline
+    \end{tabular}
+  \caption{Table containing the number of random guesses made by each algorithm per map. }
+  \label{table:randomGuesses}
+\end{table}
+\begin{table}[ht!]
+  \centering
+\begin{tabular}{|l|r|r|r|}
+\hline
+\multicolumn{4}{|c|}{\textbf{Runs untill successful}} \\
+\hline
+\hline
+ & EASY\_EQUATION & RANDOM\_GUESS & SINGLE\_POINT\\\hline
+worlds/easy/nworld1 & 1 & 133 & 1\\
+worlds/easy/nworld2 & 1 & 377 & 1\\
+worlds/easy/nworld3 & 1 & 100 & 1\\
+worlds/easy/nworld4 & 1 & 21 & 1\\
+worlds/easy/nworld5 & 1 & 31 & 2\\
+worlds/hard/nworld1 & 1 & 1000 & 1\\
+worlds/hard/nworld2 & 1 & 1000 & 4\\
+worlds/hard/nworld3 & 1 & 1000 & 1\\
+worlds/hard/nworld4 & 1 & 1000 & 1\\
+worlds/hard/nworld5 & 1 & 1000 & 1\\
+worlds/medium/nworld1 & 1 & 1000 & 1\\
+worlds/medium/nworld2 & 1 & 1000 & 1\\
+worlds/medium/nworld3 & 1 & 1000 & 2\\
+worlds/medium/nworld4 & 1 & 1000 & 1\\
+worlds/medium/nworld5 & 1 & 1000 & 2\\
+    \hline
+    \end{tabular}
+  \caption{Table containing the number of runs until a strategy was successfull by each algorithm per map. The number of runs was capped a 1000 so this value means that the algorithm was not successful at all. }
+  \label{table:runsUntillSuccessful}
+\end{table}
 
 
 \section{Conclusion}
 \label{conclusion}
-
+In this report we implemented an agant designed to play games of nettlesweeper, a simplified version of minesweeper. We implemented several strategies and interpreted the results. This lead us to believe that a strategy which attempts to minimse guesses down the line by making guesses early, could yield significant results. We could not make any further deductions because the experiments and the strategies involved did not contain large amounts of complexity. 
  
  
 word count:

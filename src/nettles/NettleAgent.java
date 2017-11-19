@@ -231,7 +231,7 @@ public class NettleAgent {
         // should we reveal any neighbours?
         if (numb == 0) {
             for (MapCell safeNeighbour : kb.getHiddenNeighbours(cell)) {
-                probe(safeNeighbour);
+                reveal(safeNeighbour);
             }
 
         }
