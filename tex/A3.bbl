@@ -6,9 +6,37 @@ Cook, S.~A. (1971).
 \newblock {\em Proceedings of the 3rd {\{}IEEE{\}} Symposium on the Theory of
   Computation}, pages 151--158.
 
+\bibitem[\protect\astroncite{Golan}{2011}]{Golan2011}
+Golan, S. (2011).
+\newblock {Minesweeper on graphs}.
+\newblock {\em Applied Mathematics and Computation}, 217(14):6616--6623.
+
+\bibitem[\protect\astroncite{Golan}{2014}]{Golan2014}
+Golan, S. (2014).
+\newblock {Minesweeper strategy for one mine}.
+\newblock {\em Applied Mathematics and Computation}, 232:292--302.
+
 \bibitem[\protect\astroncite{Kaye}{2000}]{Kaye00}
 Kaye, R. (2000).
 \newblock {Minesweeper is NP-complete.}
 \newblock {\em Mathematical Intelligencer}, 22(2):9.
+
+\bibitem[\protect\astroncite{Meel}{2014}]{Meel2014}
+Meel, K.~S. (2014).
+\newblock {Sampling Techniques for Boolean Satisfiability}.
+\newblock {\em CoRR}, abs/1404.6.
+
+\bibitem[\protect\astroncite{Mejia-Lavalle et~al.}{2016}]{Mejia-Lavalle2016}
+Mejia-Lavalle, M., {Jose Ruiz}, A., {Joaquin Perez}, O., and {Marilu
+  Cervantes}, S. (2016).
+\newblock {Modified Neural Net for the Boolean Satisfiability Problem}.
+\newblock {\em Proceedings - 2015 International Conference on Mechatronics,
+  Electronics, and Automotive Engineering, ICMEAE 2015}, pages 64--69.
+
+\bibitem[\protect\astroncite{Su et~al.}{2016}]{Su2016}
+Su, J., Tu, T., and He, L. (2016).
+\newblock {A quantum annealing approach for boolean satisfiability problem}.
+\newblock {\em Proceedings of the 53rd Annual Design Automation Conference on -
+  DAC '16}, pages 1--6.
 
 \end{thebibliography}
