@@ -84,10 +84,10 @@ public class AILab implements Observer {
 
             // example of how to setup a single experiment
 
-            //			File testDir = new File(testingDir + File.separator + "medium" + File.separator + "nworld5");
-            //			data.put(testDir.getPath(), new TreeMap<String, Map<String, Integer>>());
-            //			 runSingleExperiment(testDir, StrategyType.EASY_EQUATION, true);
-            //			 printMode = PrintMode.VERBOSE;
+            //            File testDir = new File(testingDir + File.separator + "medium" + File.separator + "nworld3");
+            //            data.put(testDir.getPath(), new TreeMap<String, Map<String, Integer>>());
+            //            runSingleExperiment(testDir, StrategyType.EASY_EQUATION, true);
+            //            printMode = PrintMode.VERBOSE;
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

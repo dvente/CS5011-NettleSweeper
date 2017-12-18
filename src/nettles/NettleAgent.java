@@ -80,7 +80,7 @@ public class NettleAgent {
                     probe(cell);
                 }
             }
-            if (kb.getHiddenCells().size() == numberOfNettles) {
+            if (kb.getHiddenCells().size() == (numberOfNettles - kb.getFlaggedCells().size())) {
                 // all hidden cells must be nettles, so flag all of them
                 Set<MapCell> tempSet = new HashSet<MapCell>();
                 tempSet.addAll(kb.getHiddenCells());
