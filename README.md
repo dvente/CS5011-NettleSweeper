@@ -1,10 +1,10 @@
 # CS5011-NettleSweeper
 One project I did as an assignement for CS5011 (AI practices) during my Masters at the University of St Andrews. 
  
- ##The assignement
+ ## The assignement
  This assignement was written by Alice Toniolo, School of Computer Science, University of St Andrews 2017-18
  
-###Introduction
+### Introduction
 The nettle sweeper game is inspired by the well-known Mineswepeer computer game1
 * The nettle sweeper world is a square grid of NxN squares with M nettles scattered among them.
 Any square can be probed by the agent in any order. If the agent probes a square that
@@ -47,7 +47,7 @@ goal is to employ one that limits the amount of random guessing needed to solve 
 in order to increase the chances of winning. For more details on the strategies, please refer
 to the lecture slides
 
-##Contents
+## Contents
 This repo contains:
 1. The game code
 2. logic codge to provide solutions
