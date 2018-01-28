@@ -1,5 +1,5 @@
 # CS5011-NettleSweeper
-One project I did as an assignement for CS5011 (AI practices) during my Masters at the University of St Andrews. 
+One project I did as an assignement for CS5011 (AI practices) during my Masters at the University of St Andrews. I don't intend to continue working on this project. This is just to show some of my work. If you're curious about my work, I'd advice you to take a look at the AIlab code, which is designed to automaticall run different algorithms on testing maps and print the results. I feel those are the most interesting parts. 
  
  ## The assignement
  This assignement was written by Alice Toniolo, School of Computer Science, University of St Andrews 2017-18
@@ -53,4 +53,5 @@ This repo contains:
 2. logic codge to provide solutions
 3. Code to randomly generate new worlds
 4. Code to test all registered algorithms and print the results in various formats
+
 
